@@ -1,0 +1,68 @@
+﻿@model TouristGuide.Models.Attraction
+@using TouristGuide.Models;
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div class="post">
+	<p>@Html.Raw(Model.Description)</p>
+    @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+    {
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) |
+            @Html.ActionLink("Go back to attractions' index", "Index")
+        </p>
+    }
+    <h3>Reviews</h3>
+    @if (Model.Reviews.Count == 0)
+    {
+        <div class="review">
+            <p>No reviews.</p>
+        </div>
+    }
+    @foreach (var item in Model.Reviews)
+    {
+        <div class="review">
+            <p><b>Author: </b>@item.Author</p>
+            <p><b>Date: </b>@String.Format("{0:d} ({0:HH}:{0:mm})", item.Date)</p>
+            <p><b>Rating: </b>@item.Rating</p>
+            <p>@item.Text</p>
+        </div>
+    }
+    @if (Request.IsAuthenticated)
+    {
+        using (Html.BeginForm("ReviewCreate", "Attraction"))
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                <legend>Add review</legend>
+                @Html.Hidden("Author", Context.User.Identity.Name)
+                @Html.Hidden("AttractionID", Model.ID)
+                <div class="editor-label">
+                    Rating (1-10)
+                </div>
+                <div class="editor-field">
+                    <input class="text-box single-line" data-val="true" data-val-range="Rating scale: 1-10" data-val-range-max="10" data-val-range-min="1" id="Rating" name="Rating" type="text" value="" />
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Description)
+                </div>
+                <div class="editor-field">
+                    <textarea rows="5" cols="10" class="text-box multi-line" data-val="true" data-val-required="The Text field is required." id="Text" name="Text"></textarea>
+                    <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"/>
+                </div>
+                <p>
+                    <input type="submit" value="Send" />
+                </p>
+            </fieldset>
+        }
+    }
+    else
+    {
+        @Html.ActionLink("Log on to add review","LogOn","Account")
+    }
+
+</div>
