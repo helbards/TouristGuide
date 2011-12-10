@@ -29,6 +29,13 @@
             <p><b>Date: </b>@String.Format("{0:d} ({0:HH}:{0:mm})", item.Date)</p>
             <p><b>Rating: </b>@item.Rating</p>
             <p>@item.Text</p>
+            @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin") || HttpContext.Current.User.Identity.Name == item.Author)
+            {
+                <p>
+                    @Html.ActionLink("Edit", "ReviewEdit", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "ReviewDelete", new { id = item.ID })
+                </p>
+            }
         </div>
     }
     @if (Request.IsAuthenticated)
@@ -62,7 +69,8 @@
     }
     else
     {
-        @Html.ActionLink("Log on to add review","LogOn","Account")
+        <br />
+        @Html.ActionLink("Log on to add review", "LogOn", "Account", new { returnUrl = Request.RawUrl }, null)
     }
 
 </div>

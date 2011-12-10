@@ -1,0 +1,7 @@
+TouristGuide.Deploy
+TouristGuide/bin
+TouristGuide/obj
+TouristGuide.Tests/bin
+TouristGuide.Tests/obj
+TouristGuide.suo
+TouristGuide/App_Data

@@ -22,6 +22,8 @@ namespace TouristGuide.Models
 
         public Coordinates Coordinates { get; set; }
 
+        public Address Address { get; set; }
+
         [Required]
         public Country Country { get; set; }
 

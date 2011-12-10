@@ -14,7 +14,7 @@ namespace TouristGuide.Models
         public DbSet<AttractionType> AttractionType { get; set; }
         public DbSet<Coordinates> Coordinates { get; set; }
         public DbSet<Country> Country { get; set; }
-        public DbSet<Location> Location { get; set; }
-        public DbSet<LocationType> LocationType { get; set; }
+        public DbSet<Place> Place { get; set; }
+        public DbSet<Address> Address { get; set; }
     }
 }

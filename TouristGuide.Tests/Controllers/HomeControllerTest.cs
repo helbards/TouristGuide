@@ -3,39 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TouristGuide;
 using TouristGuide.Controllers;
+using TouristGuide.Models;
 
 namespace TouristGuide.Tests.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class HomeControllerTest
     {
-        [TestMethod]
+        HomeController controller;
+
+        [TestFixtureSetUp]
+        public void Setup()
+        {
+            controller = new HomeController();
+        }
+
+        [Test]
         public void Index()
         {
-            // Arrange
-            HomeController controller = new HomeController();
-
             // Act
             ViewResult result = controller.Index() as ViewResult;
 
-            // Assert
-            Assert.AreEqual("Welcome to ASP.NET MVC!", result.ViewBag.Message);
+            // Asserts
+            Assert.IsNotNull(result);
+            var model = result.Model;
+            Assert.IsNotNull(model);
         }
 
-        [TestMethod]
+        [Test]
         public void About()
         {
-            // Arrange
-            HomeController controller = new HomeController();
-
             // Act
             ViewResult result = controller.About() as ViewResult;
 
-            // Assert
+            // Asserts
             Assert.IsNotNull(result);
+            var model = result.Model;
+            Assert.IsNull(model);
         }
     }
 }

@@ -95,8 +95,9 @@ namespace TouristGuide.Controllers
         //
         // GET: /Account/LogOn
 
-        public ActionResult LogOn()
+        public ActionResult LogOn(string returnUrl=null)
         {
+            ViewBag.returnUrl = returnUrl;
             return View();
         }
 
@@ -140,9 +141,11 @@ namespace TouristGuide.Controllers
         //
         // GET: /Account/LogOff
 
-        public ActionResult LogOff()
+        public ActionResult LogOff(string returnUrl=null)
         {
             FormsAuthentication.SignOut();
+            if(returnUrl!=null)
+                return Redirect(returnUrl);
 
             return RedirectToAction("Index", "Home");
         }

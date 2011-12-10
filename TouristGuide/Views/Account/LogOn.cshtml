@@ -17,7 +17,7 @@
     <text><span class="red">You don't have privileges for this part of website.</span></text>
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(new { returnUrl = ViewBag.returnUrl }))
 {
     <div>
         <fieldset>

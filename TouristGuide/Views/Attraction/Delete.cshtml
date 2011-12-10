@@ -1,10 +1,8 @@
 ﻿@model TouristGuide.Models.Attraction
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete attraction";
 }
-
-<h2>Delete</h2>
 
 <h3>Are you sure you want to delete this?</h3>
 <fieldset>
@@ -12,12 +10,12 @@
 
     <div class="display-label">Name</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
+        <b>@Html.DisplayFor(model => model.Name)</b>
     </div>
 
     <div class="display-label">Description</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Description)
+        @Html.Raw(Model.Description)
     </div>
 </fieldset>
 @using (Html.BeginForm()) {

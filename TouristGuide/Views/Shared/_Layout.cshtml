@@ -18,9 +18,8 @@
 			<nav>
                 <ul id="menu">
 				    <li class="home">@Html.ActionLink("Home", "Index", "Home")</li>
-				    <li>@Html.ActionLink("Countries", "Find", "Home")</li>
-				    <li>@Html.ActionLink("Cities", "Index", "Attraction")</li>
-                    <li>@Html.ActionLink("Regions", "Index", "Attraction")</li>
+				    <li>@Html.ActionLink("Countries", "Index", "Country")</li>
+				    <li>@Html.ActionLink("Cities and Regions", "Index", "Place")</li>
                     <li>@Html.ActionLink("Attractions", "Index", "Attraction")</li>
                     <li>@Html.ActionLink("Mobile app", "Mobile", "Home")</li>
 				    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
@@ -47,29 +46,15 @@
                         ACCOUNT
                     </div>
                     @{Html.RenderAction("LogOnFast", "Account");}
-					<div class="about">
-						<img src="../../Content/images/photo4.jpg" alt="" width="251" height="93" />
-						<p>Lorem ipsum dolor sit amet, consectetur adip- isicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehen- derit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-						<a href="#" class="more">more info about me</a>
-					</div>
-					<img src="../../Content/images/title2.gif" alt="" width="251" height="26" />
-					<ul id="categories">
-						<li><a href="#">Photo Gallery #1</a></li>
-						<li><a href="#">Photo Gallery #2</a></li>
-						<li><a href="#">Photo Gallery #3</a></li>
-						<li><a href="#">Photo Gallery #4</a></li>
-						<li><a href="#">Photo Gallery #5</a></li>
-						<li><a href="#">Photo Gallery #6</a></li>
-						<li><a href="#">Photo Gallery #7</a></li>
-						<li><a href="#">Photo Gallery #8</a></li>
-						<li><a href="#">Photo Gallery #9</a></li>
-					</ul>
-					<img src="../../Content/images/title3.gif" alt="" width="251" height="25" />																																																																																																																																																												<div class="inner_copy"><a href="http://www.greatdirectories.org/categories/travel-directories/">travel directories</a><a href="http://www.grungemagazine.com/">grunge</a></div>
+                    <hr class="sidebar-hr" />										
+					<div class="sidebar-title">
+                        MOST POPULAR...
+                    </div>																																																																																																																																																											<div class="inner_copy"><a href="http://www.greatdirectories.org/categories/travel-directories/">travel directories</a><a href="http://www.grungemagazine.com/">grunge</a></div>
 					<ul id="photos">
-						<li><a href="#"><img src="../../Content/images/image1.jpg" alt="" width="248" height="93" /></a> <a href="#">Ut enim ad minim veniam.</a></li>
-						<li><a href="#"><img src="../../Content/images/image2.jpg" alt="" width="248" height="93" /></a> <a href="#">Sed do eiusmod tempor.</a></li>
-						<li><a href="#"><img src="../../Content/images/image3.jpg" alt="" width="248" height="93" /></a> <a href="#">Consectetur adipisicing.</a></li>
-						<li><a href="#"><img src="../../Content/images/image4.jpg" alt="" width="248" height="93" /></a> <a href="#">Duis aute irure dolor.</a></li>
+						<li><a href="#"><img src="../../Content/images/image1.jpg" alt="" width="248" height="93" /></a> <a href="#">Most popular country.</a></li>
+						<li><a href="#"><img src="../../Content/images/image2.jpg" alt="" width="248" height="93" /></a> <a href="#">Most popular city.</a></li>
+						<li><a href="#"><img src="../../Content/images/image3.jpg" alt="" width="248" height="93" /></a> <a href="#">Most popular region.</a></li>
+						<li><a href="#"><img src="../../Content/images/image4.jpg" alt="" width="248" height="93" /></a> <a href="#">Most popular attraction.</a></li>
 					</ul>
 				</div>
 			</div>

@@ -4,7 +4,7 @@
 @if(Request.IsAuthenticated) 
 {
     <text>Welcome <b>@Context.User.Identity.Name</b>
-    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
+    [ @Html.ActionLink("Log Off", "LogOff", "Account", new { returnUrl = Request.RawUrl }, null) ]</text>
 }
 
 else 
@@ -14,7 +14,7 @@ else
         <form action="/Account/LogOn" method="post">
             User:<br />@Html.TextBoxFor(m => m.UserName)<br />
             Password:<br />@Html.PasswordFor(m => m.Password)<br />
-            <input type="submit" value="Log On" />
+            <input type="submit" value="Log On" /> @Html.ActionLink("Register", "Register", "Account")
         </form>
     @*}*@
 }

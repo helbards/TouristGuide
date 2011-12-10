@@ -357,8 +357,8 @@ fieldset p
 }
 
 textarea {
-    min-height: 75px;
-    width: 20em;
+    min-height: 175px;
+    width: 30em;
 }
 
 a 
@@ -408,6 +408,14 @@ table.manage td
 	border: 1px solid #e8eef4;
 }
 
+table.table_center
+{
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+/*end table*/
+
 #render
 {
     color: #97A7B7;
@@ -433,4 +441,10 @@ div.review
 div.review p
 {
    padding: 2px;
+}
+
+.sidebar-hr
+{
+    border: 0;
+    margin: 10px 0 20px 0;
 }

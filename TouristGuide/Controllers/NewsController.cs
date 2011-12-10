@@ -22,10 +22,9 @@ namespace TouristGuide.Controllers
 
         //
         // GET: /News/Add
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
-            ViewBag.Now = DateTime.Now;
             NewsTimeViewModel newNewsTime = new NewsTimeViewModel();
             newNewsTime.News = new News();
             newNewsTime.News.Date = DateTime.Now;
@@ -35,7 +34,7 @@ namespace TouristGuide.Controllers
         //
         // POST: /News/Add
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public ActionResult Create(NewsTimeViewModel newNewsTime)
         {
             if (ModelState.IsValid)
@@ -68,7 +67,7 @@ namespace TouristGuide.Controllers
 
         // 
         // GET: /News/Edit
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(int id)
         {
             News news = db.News.Find(id);
@@ -84,7 +83,7 @@ namespace TouristGuide.Controllers
         // 
         // POST: /News/Edit 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(NewsTimeViewModel model)
         {
             try
@@ -111,7 +110,7 @@ namespace TouristGuide.Controllers
 
         // 
         // GET: /News/Delete
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             News news = db.News.Find(id);
@@ -123,7 +122,7 @@ namespace TouristGuide.Controllers
         // 
         // POST: /News/Delete 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public RedirectToRouteResult Delete(int id, FormCollection collection)
         {
             News news = db.News.Find(id);

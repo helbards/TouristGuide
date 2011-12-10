@@ -18,12 +18,17 @@ namespace TouristGuide.Controllers
             return View(news);
         }
 
-        public ActionResult Index2()
+        public ActionResult About()
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Mobile()
+        {
+            return View();
+        }
+
+        public ActionResult Contact()
         {
             return View();
         }

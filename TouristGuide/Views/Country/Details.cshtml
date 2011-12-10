@@ -1,0 +1,16 @@
+﻿@model TouristGuide.Models.Country
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<p>@Html.Raw(Model.Description)</p>
+
+@if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

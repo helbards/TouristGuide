@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TouristGuide.Models;
+using System.Web.Security;
+using TouristGuide.Helpers;
 
 namespace TouristGuide.Controllers
 { 
@@ -13,6 +15,8 @@ namespace TouristGuide.Controllers
     {
         private TouristGuideDB db = new TouristGuideDB();
 
+
+        #region Attractions
         //
         // GET: /Attraction/
 
@@ -33,17 +37,17 @@ namespace TouristGuide.Controllers
 
         //
         // GET: /Attraction/Create
-
+        [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
-            ViewBag.AttractionTypes = GetAttractionTypesToList();
-            ViewBag.Countries = GetCountriesToList();
+            ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
+            ViewBag.Countries = DbHelpers.GetCountriesToList();
             return View();
         }
 
         //
         // POST: /Attraction/Create
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Create(Attraction attraction)
         {
@@ -56,18 +60,18 @@ namespace TouristGuide.Controllers
         
         //
         // GET: /Attraction/Edit/5
- 
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(int id)
         {
-            ViewBag.AttractionTypes = GetAttractionTypesToList();
-            ViewBag.Countries = GetCountriesToList();
+            ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
+            ViewBag.Countries = DbHelpers.GetCountriesToList();
             Attraction attraction = db.Attraction.Find(id);
             return View(attraction);
         }
 
         //
         // POST: /Attraction/Edit/5
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Edit(Attraction attraction)
         {
@@ -80,7 +84,7 @@ namespace TouristGuide.Controllers
 
         //
         // GET: /Attraction/Delete/5
- 
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             Attraction attraction = db.Attraction.Find(id);
@@ -89,16 +93,30 @@ namespace TouristGuide.Controllers
 
         //
         // POST: /Attraction/Delete/5
-
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {            
             Attraction attraction = db.Attraction.Find(id);
+            //remove reviews
+            var deleteAttractionReviews =
+                    from attractions in db.AttractionReview
+                    where attractions.AttractionID == id
+                    select attractions;
+
+            foreach (var review in deleteAttractionReviews)
+            {
+                db.AttractionReview.Remove(review);
+            }
+            //---
             db.Attraction.Remove(attraction);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
+        #endregion Attractions
+
+        #region Reviews
         ////
         //// GET: /Attraction/
 
@@ -119,7 +137,7 @@ namespace TouristGuide.Controllers
 
         //
         // POST: /Attraction/ReviewCreate
-
+        [Authorize]
         [HttpPost]
         public ActionResult ReviewCreate(AttractionReview review)
         {
@@ -134,20 +152,25 @@ namespace TouristGuide.Controllers
 
         //
         // GET: /Attraction/ReviewEdit/5
-
+        [Authorize]
         public ActionResult ReviewEdit(int id)
         {
+            
             AttractionReview review = db.AttractionReview.Find(id);
+            if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
+                return RedirectToAction("Details", new { id = review.AttractionID });
             ViewBag.Attraction = db.Attraction.Find(review.AttractionID);
             return View(review);
         }
 
         //
         // POST: /Attraction/ReviewEdit/5
-
+        [Authorize]
         [HttpPost]
         public ActionResult ReviewEdit(AttractionReview review)
         {
+            if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
+                return RedirectToAction("Details", new { id = review.AttractionID });
             db.Entry(review).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Details", new { id = review.AttractionID });
@@ -155,24 +178,33 @@ namespace TouristGuide.Controllers
 
         //
         // GET: /Attraction/ReviewDelete/5
-
+        [Authorize]
         public ActionResult ReviewDelete(int id)
         {
-            Attraction attraction = db.Attraction.Find(id);
-            return View(attraction);
+            AttractionReview review = db.AttractionReview.Find(id);
+            if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
+                return RedirectToAction("Details", new { id = review.AttractionID });
+            ViewBag.Attraction = db.Attraction.Find(review.AttractionID);
+            return View(review);
         }
 
         //
         // POST: /Attraction/ReviewDelete/5
-
-        [HttpPost, ActionName("Delete")]
+        [Authorize]
+        [HttpPost, ActionName("ReviewDelete")]
         public ActionResult ReviewDeleteConfirmed(int id)
         {
-            Attraction attraction = db.Attraction.Find(id);
-            db.Attraction.Remove(attraction);
+            AttractionReview review = db.AttractionReview.Find(id);
+            if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
+                return RedirectToAction("Details", new { id = review.AttractionID });
+            db.AttractionReview.Remove(review);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = review.AttractionID });
         }
+
+        #endregion Reviews
+
+        #region Helpers
 
         protected override void Dispose(bool disposing)
         {
@@ -180,35 +212,7 @@ namespace TouristGuide.Controllers
             base.Dispose(disposing);
         }
 
-        public List<SelectListItem> GetAttractionTypesToList()
-        {
-            List<SelectListItem> attractionTypes = new List<SelectListItem>();
-            var allAttractionTypes = db.AttractionType;
-            foreach (var item in allAttractionTypes)
-            {
-                attractionTypes.Add(new SelectListItem
-                {
-                    Text = item.Name,
-                    Value = item.ID.ToString()
-                });
-            }
-            return attractionTypes;
-        }
-
-        public List<SelectListItem> GetCountriesToList()
-        {
-            List<SelectListItem> countries = new List<SelectListItem>();
-            var allCountries = db.Country;
-            foreach (var item in allCountries)
-            {
-                countries.Add(new SelectListItem
-                {
-                    Text = item.Name,
-                    Value = item.ID.ToString()
-                });
-            }
-            return countries;
-        }
+        #endregion Helpers
     }
 
 }
