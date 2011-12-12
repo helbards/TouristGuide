@@ -16,16 +16,43 @@ namespace TouristGuide.Controllers
 
         // GET: /WebService/GetAttractions
         [WebMethod]
-        public JsonResult GetAttractionsByCountry(string name)
+        public JsonResult GetAttractions(string place)
         {
-            var attractions = db.Attraction.Where(c => c.Country.Name == name).ToList();
+            List<Attraction> attractions;
+            if(place!=null)
+                attractions = db.Attraction.Where(p => p.Address.City == place || p.Address.Region == place).ToList();
+            else
+                attractions = db.Attraction.ToList();
             return Json(attractions, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /WebService/GetAttractions
+        [WebMethod]
+        public JsonResult GetAttractionsByPlaceId(int id=-1)
+        {
+            List<Attraction> attractions;
+            if (id != -1)
+            {
+                var place = db.Place.Find(id);
+                attractions = db.Attraction.Where(p => p.Address.City == place.Name || p.Address.Region == place.Name).ToList();
+            }
+            else
+                attractions = db.Attraction.ToList();
+            return Json(attractions, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /WebService/GetAttractions
+        [WebMethod]
+        public JsonResult GetPlaces(string country)
+        {
+            var places = db.Place.Where(p => p.Country.Name == country).ToList();
+            return Json(places, JsonRequestBehavior.AllowGet);
         }
 
         [WebMethod]
         public JsonResult GetCountries()
         {
-            var countries = db.Country.ToList();
+            var countries = db.Country.Select(c => c.Name).ToList();
             return Json(countries, JsonRequestBehavior.AllowGet);
         }
 
