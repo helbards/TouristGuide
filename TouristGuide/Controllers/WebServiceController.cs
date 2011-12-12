@@ -26,6 +26,12 @@ namespace TouristGuide.Controllers
             return Json(attractions, JsonRequestBehavior.AllowGet);
         }
 
+        [WebMethod]
+        public JsonResult GetAttraction(int id)
+        {
+            return Json(db.Attraction.Find(id), JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /WebService/GetAttractions
         [WebMethod]
         public JsonResult GetAttractionsByPlaceId(int id=-1)
@@ -41,105 +47,35 @@ namespace TouristGuide.Controllers
             return Json(attractions, JsonRequestBehavior.AllowGet);
         }
 
+        [WebMethod]
+        public JsonResult GetPlace(int id)
+        {
+            return Json(db.Place.Find(id), JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /WebService/GetAttractions
         [WebMethod]
         public JsonResult GetPlaces(string country)
         {
-            var places = db.Place.Where(p => p.Country.Name == country).ToList();
+            List<Place> places;
+            if(country!=null)
+                places = db.Place.Where(p => p.Country.Name == country).ToList();
+            else
+                places = db.Place.ToList();
             return Json(places, JsonRequestBehavior.AllowGet);
         }
 
         [WebMethod]
-        public JsonResult GetCountries()
+        public JsonResult GetCountry(int id)
         {
-            var countries = db.Country.Select(c => c.Name).ToList();
+            return Json(db.Country.Find(id), JsonRequestBehavior.AllowGet);
+        }
+
+        [WebMethod]
+        public JsonResult GetCountries(string country)
+        {
+            var countries = db.Country.ToList();
             return Json(countries, JsonRequestBehavior.AllowGet);
-        }
-
-//
-        // GET: /WebService/
-
-        public ViewResult Index()
-        {
-            return View(db.Attraction.ToList());
-        }
-
-        //
-        // GET: /WebService/Details/5
-
-        public ViewResult Details(int id)
-        {
-            Attraction attraction = db.Attraction.Find(id);
-            return View(attraction);
-        }
-
-        //
-        // GET: /WebService/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        } 
-
-        //
-        // POST: /WebService/Create
-
-        [HttpPost]
-        public ActionResult Create(Attraction attraction)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Attraction.Add(attraction);
-                db.SaveChanges();
-                return RedirectToAction("Index");  
-            }
-
-            return View(attraction);
-        }
-        
-        //
-        // GET: /WebService/Edit/5
- 
-        public ActionResult Edit(int id)
-        {
-            Attraction attraction = db.Attraction.Find(id);
-            return View(attraction);
-        }
-
-        //
-        // POST: /WebService/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(Attraction attraction)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(attraction).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(attraction);
-        }
-
-        //
-        // GET: /WebService/Delete/5
- 
-        public ActionResult Delete(int id)
-        {
-            Attraction attraction = db.Attraction.Find(id);
-            return View(attraction);
-        }
-
-        //
-        // POST: /WebService/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {            
-            Attraction attraction = db.Attraction.Find(id);
-            db.Attraction.Remove(attraction);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

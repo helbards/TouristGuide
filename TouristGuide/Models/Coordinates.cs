@@ -10,8 +10,10 @@ namespace TouristGuide.Models
     {
         public int ID { get; set; }
 
+        [Required]
         public double Latitude { get; set; }
 
+        [Required]
         public double Longitude { get; set; }
     }
 }

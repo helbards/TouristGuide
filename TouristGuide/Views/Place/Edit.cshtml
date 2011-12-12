@@ -47,6 +47,8 @@
     <fieldset>
         <legend>Location</legend>
 
+        @Html.HiddenFor(model => model.Coordinates.ID)
+
         <div class="editor-label">
             @Html.LabelFor(model => model.Coordinates.Latitude)
         </div>
@@ -67,7 +69,7 @@
             @Html.LabelFor(model => model.Country)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(model => model.Country.ID, new SelectList(ViewBag.Countries, "Value", "Text", Model.Country.ID.ToString()))
+            @Html.DropDownListFor(model => model.Country.ID, new SelectList(ViewBag.Countries, "Value", "Text", Model.Country.ID))
         </div>
     </fieldset>
 

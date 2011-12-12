@@ -65,7 +65,7 @@ namespace TouristGuide.Controllers
         {
             ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
             ViewBag.Countries = DbHelpers.GetCountriesToList();
-            Attraction attraction = db.Attraction.Find(id);
+            Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Where(a => a.ID == id).SingleOrDefault();
             return View(attraction);
         }
 

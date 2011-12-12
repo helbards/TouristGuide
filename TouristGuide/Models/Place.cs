@@ -24,7 +24,5 @@ namespace TouristGuide.Models
 
         [Required]
         public Country Country { get; set; }
-
-        public List<Attraction> Attractions { get; set; }
     }
 }

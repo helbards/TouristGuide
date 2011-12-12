@@ -19,7 +19,7 @@ namespace TouristGuide.Controllers
 
         public ViewResult Index()
         {
-            return View(db.Place.ToList());
+            return View(db.Place.Include(c => c.Country).Include(c => c.Coordinates).ToList());
         }
 
         //
@@ -27,7 +27,7 @@ namespace TouristGuide.Controllers
 
         public ViewResult Details(int id)
         {
-            Place place = db.Place.Find(id);
+            Place place = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.ID == id).SingleOrDefault();
             return View(place);
         }
 
@@ -58,7 +58,7 @@ namespace TouristGuide.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Countries = DbHelpers.GetCountriesToList();
-            Place place = db.Place.Find(id);
+            Place place = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.ID == id).SingleOrDefault();
             return View(place);
         }
 
@@ -66,15 +66,27 @@ namespace TouristGuide.Controllers
         // POST: /Place/Edit/5
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Edit(Place place)
+        public ActionResult Edit(Place place)//, int CountryId)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(place).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(place);
+            //place.Country = db.Country.Find(place.Country.ID);
+            ////place.Country = db.Country.Find(CountryId);
+            //if (ModelState.IsValid)
+            //{
+            //    db.Entry(place).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+            //ViewBag.Countries = DbHelpers.GetCountriesToList();
+            //return View(place);
+            var updatedPlace = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.ID == place.ID).SingleOrDefault();
+            updatedPlace.Coordinates.Latitude = double.Parse(Request.Form["Coordinates.Latitude"]); // place.Coordinates.Latitude;
+            updatedPlace.Coordinates.Longitude = place.Coordinates.Longitude;
+            updatedPlace.Country = db.Country.Find(place.Country.ID);
+            updatedPlace.Description = place.Description;
+            updatedPlace.Name = place.Name;
+            db.Entry(updatedPlace).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         //
