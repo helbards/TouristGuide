@@ -69,6 +69,10 @@
             @Html.LabelFor(model => model.Country)
         </div>
         <div class="editor-field">
+            @*@Html.HiddenFor(model => model.Country.ID)
+            @Html.HiddenFor(model => model.Country.Name)
+            @Html.HiddenFor(model => model.Country.Description)
+            @Html.EditorFor(x => x.Country)*@
             @Html.DropDownListFor(model => model.Country.ID, new SelectList(ViewBag.Countries, "Value", "Text", Model.Country.ID))
         </div>
     </fieldset>

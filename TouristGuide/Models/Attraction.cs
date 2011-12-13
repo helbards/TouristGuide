@@ -9,6 +9,11 @@ namespace TouristGuide.Models
 {
     public class Attraction
     {
+        public Attraction()
+        {
+            Images = new List<AttractionImage>();
+        }
+
         public int ID { get; set; }
 
         [Required]
@@ -32,5 +37,9 @@ namespace TouristGuide.Models
         public AttractionType AttractionType { get; set; }
         
         public List<AttractionReview> Reviews { get; set; }
+
+        public List<AttractionImage> Images { get; set; }
+
+        public string Video { get; set; }
     }
 }

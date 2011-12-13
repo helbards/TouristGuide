@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TouristGuide.Models;
 using System.Web.Security;
 using TouristGuide.Helpers;
+using System.IO;
 
 namespace TouristGuide.Controllers
 { 
@@ -20,9 +21,27 @@ namespace TouristGuide.Controllers
         //
         // GET: /Attraction/
 
-        public ViewResult Index()
+        public ViewResult Index(string country, string place)
         {
-            return View(db.Attraction.ToList());
+            List<Attraction> attractions;
+            if (country != null && place != null)
+            {
+                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place)).ToList();
+            }
+            else if (country != null && place == null)
+            {
+                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).ToList();
+            }
+            else if (country == null && place != null)
+            {
+                attractions = db.Attraction.Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place)).ToList();
+            }
+            else
+            {
+                attractions = db.Attraction.ToList();
+            }
+
+            return View(attractions);
         }
 
         //
@@ -30,8 +49,11 @@ namespace TouristGuide.Controllers
 
         public ViewResult Details(int id)
         {
-            Attraction attraction = db.Attraction.Find(id);
-            attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
+            //Attraction attraction = db.Attraction.Find(id);
+            //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
+            //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
+            var attraction = db.Attraction.Include(r => r.Reviews).Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
+                .Where(a => a.ID == id).SingleOrDefault();
             return View(attraction);
         }
 
@@ -53,6 +75,30 @@ namespace TouristGuide.Controllers
         {
             attraction.AttractionType = db.AttractionType.Find(attraction.AttractionType.ID);
             attraction.Country = db.Country.Find(attraction.Country.ID);
+
+            //upload photos
+            try
+            {
+                int i = 0;
+                foreach (string upload in Request.Files)
+                {
+                    if (Request.Files[i].ContentLength == 0)
+                        continue;
+
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "Content/AttractionImages/";
+                    string ext = Request.Files[i].FileName.Substring(Request.Files[i].FileName.LastIndexOf('.'));
+                    AttractionImage ai = new AttractionImage { AttractionID = attraction.ID, FileName = generateRandomString(32) + ext };
+                    attraction.Images.Add(ai);
+                    Request.Files[i].SaveAs(Path.Combine(path, ai.FileName));
+                    i++;
+                }
+            }
+            catch (NullReferenceException)
+            {
+                //no photo
+            }
+            //end of upload user photo
+
             db.Attraction.Add(attraction);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -65,7 +111,7 @@ namespace TouristGuide.Controllers
         {
             ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
             ViewBag.Countries = DbHelpers.GetCountriesToList();
-            Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Where(a => a.ID == id).SingleOrDefault();
+            Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Include(c => c.Coordinates).Include(a => a.Address).Where(a => a.ID == id).SingleOrDefault();
             return View(attraction);
         }
 
@@ -75,9 +121,13 @@ namespace TouristGuide.Controllers
         [HttpPost]
         public ActionResult Edit(Attraction attraction)
         {
-            attraction.AttractionType = db.AttractionType.Find(attraction.AttractionType.ID);
-            attraction.Country = db.Country.Find(attraction.Country.ID);
-            db.Entry(attraction).State = EntityState.Modified;
+            var updatedAttraction = db.Attraction.Include(a => a.AttractionType).Include(c => c.Country).Include(c => c.Coordinates).Include(a => a.Address).Where(x => x.ID == attraction.ID).SingleOrDefault();
+            updatedAttraction.AttractionType = db.AttractionType.Find(attraction.AttractionType.ID);
+            updatedAttraction.Country = db.Country.Find(attraction.Country.ID);
+            updatedAttraction.Coordinates.Latitude = attraction.Coordinates.Latitude;
+            updatedAttraction.Coordinates.Longitude = attraction.Coordinates.Longitude;
+            updatedAttraction.Address = attraction.Address;
+            db.Entry(updatedAttraction).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -109,6 +159,31 @@ namespace TouristGuide.Controllers
                 db.AttractionReview.Remove(review);
             }
             //---
+
+            //remove images
+            var deleteAttractionImages =
+                    from attractions in db.AttractionImage
+                    where attractions.AttractionID == id
+                    select attractions;
+            try
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory + "Content/AttractionImages/";
+                foreach (var img in deleteAttractionImages)
+                {
+                    FileInfo TheFile = new FileInfo(path + img.FileName);
+                    if (TheFile.Exists)
+                    {
+                        TheFile.Delete();
+                    }
+                    db.AttractionImage.Remove(img);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                //no images
+            }
+            //---
+
             db.Attraction.Remove(attraction);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -210,6 +285,28 @@ namespace TouristGuide.Controllers
         {
             db.Dispose();
             base.Dispose(disposing);
+        }
+
+        public String generateRandomString(int length)
+        {
+            //Initiate objects & vars    
+            Random random = new Random();
+            String randomString = "";
+            int randNumber;
+
+            //Loop ‘length’ times to generate a random number or character
+            for (int i = 0; i < length; i++)
+            {
+                if (random.Next(1, 3) == 1)
+                    randNumber = random.Next(97, 123); //char {a-z}
+                else
+                    randNumber = random.Next(48, 58); //int {0-9}
+
+                //append random char or digit to random string
+                randomString = randomString + (char)randNumber;
+            }
+            //return the random string
+            return randomString;
         }
 
         #endregion Helpers

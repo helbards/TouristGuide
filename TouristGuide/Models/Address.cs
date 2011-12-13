@@ -9,11 +9,13 @@ namespace TouristGuide.Models
     public class Address
     {
         public int ID { get; set; }
-        
+
         public string Region { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
-        public int BuildingNumber { get; set; }
+
+        [Display(Name = "Building number")]
+        public int? BuildingNumber { get; set; }
         public Country Country { get; set; }
     }
 }

@@ -10,6 +10,14 @@
     <p>@Html.ActionLink("Add attraction", "Create")</p>
 }
 
+<div class="center border-bottom">
+<form action="/Attraction/Index" method="get">
+    Country: <input type="text" name="country" />
+    City / region: <input type="text" name="place" />
+    <input type="submit" value="Filter" />
+</form>
+</div>
+
 @foreach (var item in Model)
 {
     <div class="post">

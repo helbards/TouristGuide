@@ -4,8 +4,6 @@
     ViewBag.Title = Model.Name;
 }
 
-<p>@Html.Raw(Model.Description)</p>
-
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
     <p>
@@ -14,3 +12,7 @@
         @Html.ActionLink("Back to List", "Index")
     </p>
 }
+
+<p>@Html.Raw(Model.Description)</p>
+
+

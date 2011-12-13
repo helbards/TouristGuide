@@ -10,6 +10,14 @@
         @Html.ActionLink("Create New", "Create")
     </p>
 }
+
+<div class="center border-bottom">
+<form action="/Place/Index" method="get">
+    Country: <input type="text" name="country" />
+    <input type="submit" value="Filter" />
+</form>
+</div>
+
 <table class="table_center">
     <tr>
         <th>

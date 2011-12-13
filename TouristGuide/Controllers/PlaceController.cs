@@ -17,9 +17,18 @@ namespace TouristGuide.Controllers
         //
         // GET: /Place/
 
-        public ViewResult Index()
+        public ViewResult Index(string country)
         {
-            return View(db.Place.Include(c => c.Country).Include(c => c.Coordinates).ToList());
+            List<Place> places;
+            if (country != null)
+            {
+                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Country.Name.Contains(country)).ToList();
+            }
+            else
+            {
+                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).ToList();
+            }
+            return View(places);
         }
 
         //
@@ -68,18 +77,19 @@ namespace TouristGuide.Controllers
         [HttpPost]
         public ActionResult Edit(Place place)//, int CountryId)
         {
-            //place.Country = db.Country.Find(place.Country.ID);
-            ////place.Country = db.Country.Find(CountryId);
+            //place.Country = db.Country.Find(CountryId);
+            ////place.Country.ID = CountryId;
             //if (ModelState.IsValid)
             //{
-            //    db.Entry(place).State = EntityState.Modified;
+            //    UpdateModel(place);
+            //    //db.Entry(place).State = EntityState.Modified;
             //    db.SaveChanges();
             //    return RedirectToAction("Index");
             //}
             //ViewBag.Countries = DbHelpers.GetCountriesToList();
             //return View(place);
             var updatedPlace = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.ID == place.ID).SingleOrDefault();
-            updatedPlace.Coordinates.Latitude = double.Parse(Request.Form["Coordinates.Latitude"]); // place.Coordinates.Latitude;
+            updatedPlace.Coordinates.Latitude = place.Coordinates.Latitude;
             updatedPlace.Coordinates.Longitude = place.Coordinates.Longitude;
             updatedPlace.Country = db.Country.Find(place.Country.ID);
             updatedPlace.Description = place.Description;

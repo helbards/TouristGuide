@@ -11,6 +11,7 @@ namespace TouristGuide.Models
         public DbSet<News> News { get; set; }
         public DbSet<Attraction> Attraction { get; set; }
         public DbSet<AttractionReview> AttractionReview { get; set; }
+        public DbSet<AttractionImage> AttractionImage { get; set; }
         public DbSet<AttractionType> AttractionType { get; set; }
         public DbSet<Coordinates> Coordinates { get; set; }
         public DbSet<Country> Country { get; set; }

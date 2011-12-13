@@ -18,6 +18,14 @@
         var text = tinyMCE.get('Description').getContent();
         $('#Description').html(text);
     }
+
+    function addImgInput() {
+        $('.editor-field-images').append("<input type='file' name='photo' />");
+    }
+
+    function delImgInput() {
+        $('.editor-field-images input').last().remove();
+    }
 </script>
 
 @using (Html.BeginForm())
@@ -45,6 +53,8 @@
     
     <fieldset>
         <legend>Location</legend>
+            
+            @Html.HiddenFor(model => model.Coordinates.ID)
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Coordinates.Latitude)
@@ -70,12 +80,61 @@
         </div>
 
         <div class="editor-label">
+            @Html.LabelFor(model => model.Address.Region)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address.Region)
+            @Html.ValidationMessageFor(model => model.Address.Region)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Address.City)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address.City)
+            @Html.ValidationMessageFor(model => model.Address.City)
+        </div>        
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Address.Street)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address.Street)
+            @Html.ValidationMessageFor(model => model.Address.Street)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Address.BuildingNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address.BuildingNumber)
+            @Html.ValidationMessageFor(model => model.Address.BuildingNumber)
+        </div>
+
+        <div class="editor-label">
             @Html.LabelFor(model => model.AttractionType)
         </div>
         <div class="editor-field">
             @Html.DropDownListFor(model => model.AttractionType.ID, new SelectList(ViewBag.AttractionTypes, "Value", "Text", Model.AttractionType.ID))
         </div>
 
+    </fieldset>
+    
+    <fieldset>
+        <legend>Photos and Video</legend>
+        
+        <div class="editor-field-images">
+            <input type="file" name="photo" />
+        </div>
+        <input type="button" value=" + " onclick="addImgInput()" /><input type="button" value=" - " onclick="delImgInput()" />
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Video)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Video)
+            @Html.ValidationMessageFor(model => model.Video)
+        </div>
     </fieldset>
 
         <p>

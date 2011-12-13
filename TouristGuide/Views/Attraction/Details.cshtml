@@ -6,8 +6,7 @@
 }
 
 <div class="post">
-	<p>@Html.Raw(Model.Description)</p>
-    @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+	@if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
     {
         <p>
             @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
@@ -15,6 +14,45 @@
             @Html.ActionLink("Go back to attractions' index", "Index")
         </p>
     }
+
+    <p>@Html.Raw(Model.Description)</p>   
+<div class="post-address">
+<ul>
+    <li><b>Region:</b> @Model.Address.Region</li>
+    <li><b>City:</b> @Model.Address.City</li>
+    <li><b>Street:</b> @Model.Address.Street @Model.Address.BuildingNumber</li>
+</ul>
+</div>
+    			
+@if (Model.Images.Count() > 0)
+{
+    <h3>Images</h3>
+    <div class="post-images">
+        <ul class="thumbs noscript">
+            @for (int i = 0; i < Model.Images.Count(); ++i)
+            {   
+                <li>
+		            <a class="thumb" href="@Url.Content("~/Content/AttractionImages/" + Model.Images[i].FileName)" title="Image #@i">
+			            <img src="@Url.Content("~/Content/AttractionImages/" + Model.Images[i].FileName)" alt="Image #@i" />
+		            </a>
+	            </li>
+            }
+        </ul>
+    </div>
+}
+@if (Model.Video != null)
+{
+    <h3>Video</h3>
+    <div class="post-video">
+        <object style="height: 340px; width: 560px">
+        <param name="movie" value="@Model.Video">
+        <param name="allowFullScreen" value="true">
+        <param name="allowScriptAccess" value="always">
+        <embed src="@Model.Video" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="560" height="340">
+        </object>
+    </div>
+}
+
     <h3>Reviews</h3>
     @if (Model.Reviews.Count == 0)
     {
