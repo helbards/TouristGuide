@@ -6,16 +6,16 @@ using System.Data.Entity;
 
 namespace TouristGuide.Models
 {
-    public class TouristGuideDB : DbContext
+    public class TouristGuideDB : DbContext, ITouristGuideDB
     {
-        public DbSet<News> News { get; set; }
-        public DbSet<Attraction> Attraction { get; set; }
-        public DbSet<AttractionReview> AttractionReview { get; set; }
-        public DbSet<AttractionImage> AttractionImage { get; set; }
-        public DbSet<AttractionType> AttractionType { get; set; }
-        public DbSet<Coordinates> Coordinates { get; set; }
-        public DbSet<Country> Country { get; set; }
-        public DbSet<Place> Place { get; set; }
-        public DbSet<Address> Address { get; set; }
+        public IDbSet<News> News { get; set; }
+        public IDbSet<Attraction> Attraction { get; set; }
+        public IDbSet<AttractionReview> AttractionReview { get; set; }
+        public IDbSet<AttractionImage> AttractionImage { get; set; }
+        public IDbSet<AttractionType> AttractionType { get; set; }
+        public IDbSet<Coordinates> Coordinates { get; set; }
+        public IDbSet<Country> Country { get; set; }
+        public IDbSet<Place> Place { get; set; }
+        public IDbSet<Address> Address { get; set; }
     }
 }

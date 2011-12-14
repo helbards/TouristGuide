@@ -12,9 +12,11 @@ else
     @*@using (Html.BeginForm()) 
     {*@
         <form action="/Account/LogOn" method="post">
-            User:<br />@Html.TextBoxFor(m => m.UserName)<br />
-            Password:<br />@Html.PasswordFor(m => m.Password)<br />
+            <fieldset>
+                <label for="UserName">User:</label><br />@Html.TextBoxFor(m => m.UserName)<br />
+                <label for="Password">Password:</label><br />@Html.PasswordFor(m => m.Password)<br />
             <input type="submit" value="Log On" /> @Html.ActionLink("Register", "Register", "Account")
+            </fieldset>
         </form>
     @*}*@
 }

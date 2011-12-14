@@ -87,17 +87,17 @@ namespace TouristGuide.Controllers
         [WebMethod]
         public JsonResult GetAttractionsByPlaceId(int id=-1)
         {
-            List<Attraction> attractions;
+            List<AttractionViewModel> attractions;
             if (id != -1)
             {
                 var place = db.Place.Find(id);
-                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).
-                    Where(p => p.Address.City == place.Name || p.Address.Region == place.Name).ToList();
+                attractions = db.Attraction.Where(p => p.Address.City == place.Name || p.Address.Region == place.Name).
+                    Select(x => new AttractionViewModel() { ID = x.ID, Name = x.Name }).ToList();
             }
             else
-                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).ToList();
-            foreach (var attr in attractions)
-                attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
+            {
+                attractions = db.Attraction.Select(x => new AttractionViewModel() { ID = x.ID, Name = x.Name }).ToList();
+            }
             return Json(attractions, JsonRequestBehavior.AllowGet);
         }
 

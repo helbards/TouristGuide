@@ -21,7 +21,7 @@ namespace TouristGuide.Controllers
         //
         // GET: /Attraction/
 
-        public ViewResult Index(string country, string place)
+        public ViewResult Index(string country, string place, int start = 1)
         {
             List<Attraction> attractions;
             if (country != null && place != null)
@@ -40,6 +40,17 @@ namespace TouristGuide.Controllers
             {
                 attractions = db.Attraction.ToList();
             }
+
+            int attractionsCount = attractions.Count();
+            if (start > attractionsCount)
+                start = attractionsCount;
+            if (start < 1)
+                start = 1;
+
+            ViewBag.PagesCount = attractionsCount / 10 + (attractionsCount % 10 > 0 ? 1 : 0);
+            ViewBag.CurrentPage = ((start - 1) / 10) + 1;
+
+            attractions = attractions.Skip(start - 1).Take(10).ToList();
 
             return View(attractions);
         }

@@ -9,7 +9,17 @@ namespace TouristGuide.Controllers
 {
     public class NewsController : Controller
     {
-        TouristGuideDB db = new TouristGuideDB();
+        public ITouristGuideDB db;
+
+        public NewsController()
+        {
+            db = new TouristGuideDB();
+        }
+
+        public NewsController(ITouristGuideDB dbContext)
+        {
+            db = dbContext;
+        }
 
         //
         // GET: /News/
