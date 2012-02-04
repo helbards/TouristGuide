@@ -1,0 +1,15 @@
+﻿@model TouristGuide.Models.Attraction
+@using TouristGuide.Helpers
+           
+<div class="post">
+    <h1 class="title">@Model.Name</h1>
+    <p>@Html.Raw(Html.Truncate(Model.Description, 200))</p>
+    @Html.ActionLink("Read more", "Details", new { id = Model.ID }, new { @class = "more" })
+    @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+    {
+        <text>|</text>
+        @Html.ActionLink("Edit", "Edit", "Attraction", new { id = Model.ID }, null)  
+        <text>|</text>
+        @Html.ActionLink("Delete", "Delete", "Attraction", new { id = Model.ID }, null)
+    }
+</div>

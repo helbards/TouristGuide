@@ -21,37 +21,39 @@ namespace TouristGuide.Controllers
         //
         // GET: /Attraction/
 
-        public ViewResult Index(string country, string place, int start = 1)
+        public ViewResult Index(string country, string place, int start = 0, int count = 20)
         {
-            List<Attraction> attractions;
+            List<Attraction> attractions = FilterAttractions(country, place, start, count);
+            return View(attractions);
+        }
+
+        private List<Attraction> FilterAttractions(string country, string place, int start, int count)
+        {
+            IQueryable<Attraction> attractions;
+
             if (country != null && place != null)
             {
-                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place)).ToList();
+                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place));
             }
             else if (country != null && place == null)
             {
-                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).ToList();
+                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country));
             }
             else if (country == null && place != null)
             {
-                attractions = db.Attraction.Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place)).ToList();
+                attractions = db.Attraction.Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place));
             }
             else
             {
-                attractions = db.Attraction.ToList();
+                attractions = db.Attraction;
             }
+            
+            return attractions.OrderBy(x=>x.ID).Skip(start).Take(count).ToList();
+        }
 
-            int attractionsCount = attractions.Count();
-            if (start > attractionsCount)
-                start = attractionsCount;
-            if (start < 1)
-                start = 1;
-
-            ViewBag.PagesCount = attractionsCount / 10 + (attractionsCount % 10 > 0 ? 1 : 0);
-            ViewBag.CurrentPage = ((start - 1) / 10) + 1;
-
-            attractions = attractions.Skip(start - 1).Take(10).ToList();
-
+        public ViewResult GetAttractions(string country, string place, int start, int count)
+        {
+            List<Attraction> attractions = FilterAttractions(country, place, start, count);
             return View(attractions);
         }
 
