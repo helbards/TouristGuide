@@ -10,10 +10,11 @@
     <p>@Html.ActionLink("Add attraction", "Create")</p>
 }
 
-<div class="center border-bottom">
+<div class="center border-bottom search-cat">
 <form action="/Attraction/Index" method="get">
     Country: <input type="text" name="country" />
-    City / region: <input type="text" name="place" />
+    City/Region: <input type="text" name="place" />
+    Attraction: <input type="text" name="attraction" />
     <input type="submit" value="Filter" />
 </form>
 </div>
@@ -27,7 +28,7 @@
         @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
         {
             <text>|</text>
-            @Html.ActionLink("Edit", "Edit", "Attraction", new { id = item.ID }, null)  
+            @Html.ActionLink("Edit", "Edit", "Attraction", new { id = item.ID }, null)
             <text>|</text>
             @Html.ActionLink("Delete", "Delete", "Attraction", new { id = item.ID }, null)
         }

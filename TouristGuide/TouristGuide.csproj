@@ -42,6 +42,7 @@
         </ObjectGroup>
       </Objects>
     </PublishDatabaseSettings>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -69,6 +70,7 @@
       </Objects>
     </PublishDatabaseSettings>
     <DeployIisAppPath>Default Web Site/GrupaEka</DeployIisAppPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
