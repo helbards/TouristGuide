@@ -11,6 +11,13 @@
     </p>
 }
 
+<div class="center border-bottom search-cat">
+<form action="/Country/Index" method="get">
+    Country: <input type="text" name="country" />
+    <input type="submit" value="Filter" />
+</form>
+</div>
+
 <table  class="table_center">
 @foreach (var item in Model) {
     <tr>

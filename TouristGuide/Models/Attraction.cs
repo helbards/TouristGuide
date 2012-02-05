@@ -41,5 +41,7 @@ namespace TouristGuide.Models
         public List<AttractionImage> Images { get; set; }
 
         public string Video { get; set; }
+
+        public double? AvgRating { get; set; }
     }
 }

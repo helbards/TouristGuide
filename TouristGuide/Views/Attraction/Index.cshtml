@@ -1,82 +1,49 @@
 ﻿@model IEnumerable<TouristGuide.Models.Attraction>
+@using TouristGuide.Helpers
+
 @{
     ViewBag.Title = "Attractions";
 }
-<script type="text/javascript">
-    //pagger scrolling
-    var more = true;
-    var loading = false;
-    var count = 20;
-    var start = 0;
-    var loaderImg = null;
-
-    $(document).ready(function () {
-        ShowLoading();
-        $(window).scroll($.proxy(ScrollHandler,this));
-    });
-
-     function ShowLoading() {
-         loaderImg = $("<div>").addClass("bar").css("clear", "both").css("text-align", "center");
-         var img = $("<img>").attr("src", "/Content/images/indicator.gif");
-         loaderImg.append(img);
-         $("#render").append(loaderImg);
-     }
-
-     function HideLoading() {
-         $(loaderImg).remove();
-     }
-
-     function ScrollHandler(event) {
-         if (event.target.activeElement.offsetHeight < (event.target.activeElement.scrollTop + 880) && loading == false) {
-             GetPage();
-         }
-     }
-
-     function GetPage(event) {
-         if (more == true) {
-             start += count;
-             GetAtt();
-             loading = true;
-         }
-     }
-
-    function GetAtt() {
-        $.ajax({
-            url: '@Url.Action("GetAttractions", "Attraction")',
-            type: 'GET',
-            contentType: 'application/json',
-            data: { country: $("#country").val(), place: $("#place").val(), start: start, count: count },
-            dataType: 'html',
-            success: $.proxy(Results, this)
-        });
-     }
-
-     function Results(data) {
-         if (data != null) {
-             HideLoading();
-             $("#render").append(data);
-             ShowLoading();
-             loading = false;
-         }
-         else {
-             more = false;
-             HideLoading();
-         }
-     }
-
-</script>
 
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
     <p>@Html.ActionLink("Add attraction", "Create")</p>
 }
+
 <div class="center border-bottom">
-    <form action="/Attraction/Index" method="get">
-    Country:
-    <input type="text" name="country" id="country" />
-    City / region:
-    <input type="text" name="place" id="place" />
+<form action="/Attraction/Index" method="get">
+    Country: <input type="text" name="country" />
+    City / region: <input type="text" name="place" />
     <input type="submit" value="Filter" />
-    </form>
+</form>
 </div>
-@Html.DisplayFor(m => m)
+
+@foreach (var item in Model)
+{
+    <div class="post">
+	    <h1 class="title">@item.Name</h1>
+	    <p>@Html.Raw(Html.Truncate(item.Description,200))</p>
+        @Html.ActionLink("Read more", "Details", new {id = item.ID}, new { @class = "more" })
+        @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+        {
+            <text>|</text>
+            @Html.ActionLink("Edit", "Edit", "Attraction", new { id = item.ID }, null)  
+            <text>|</text>
+            @Html.ActionLink("Delete", "Delete", "Attraction", new { id = item.ID }, null)
+        }
+    </div>
+}
+
+<div class="center">
+@for (int i = 0; i < ViewBag.PagesCount; ++i)
+{
+    if ((i + 1) == ViewBag.CurrentPage)
+    {
+        <b>@Html.ActionLink("[" + (i + 1).ToString() + "]", "Index", new { start = 10 * i + 1 })</b><text>&nbsp;</text>
+    }
+    else
+    {
+        @Html.ActionLink("[" + (i + 1).ToString() + "]", "Index", new { start = 10 * i + 1 }) <text>&nbsp;</text>
+    }
+}
+</div>

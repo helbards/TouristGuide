@@ -1,7 +1,12 @@
 TouristGuide.Deploy
 TouristGuide/bin
 TouristGuide/obj
+TouristGuide.Azure/csx
+TouristGuide.Azure/bin
+TouristGuide.Azure/obj
 TouristGuide.Tests/bin
 TouristGuide.Tests/obj
 TouristGuide.suo
 TouristGuide/App_Data
+TouristGuide.Providers/bin
+TouristGuide.Providers/obj

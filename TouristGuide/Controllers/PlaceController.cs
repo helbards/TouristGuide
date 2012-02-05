@@ -17,12 +17,20 @@ namespace TouristGuide.Controllers
         //
         // GET: /Place/
 
-        public ViewResult Index(string country)
+        public ViewResult Index(string country, string place)
         {
             List<Place> places;
-            if (country != null)
+            if (country != null && place == null)
             {
                 places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Country.Name.Contains(country)).ToList();
+            }
+            else if (country == null && place != null)
+            {
+                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Name.Contains(place)).ToList();
+            }
+            else if (country != null && place != null)
+            {
+                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Name.Contains(place) && p.Country.Name.Contains(country)).ToList();
             }
             else
             {

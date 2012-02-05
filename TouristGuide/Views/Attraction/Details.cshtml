@@ -5,19 +5,33 @@
     ViewBag.Title = Model.Name;
 }
 
+@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null) 
+@if(Model.Address.Region != null)
+{
+    <text>/</text>
+    @Model.Address.Region;
+    
+}
+@if(Model.Address.City != null)
+{
+    <text>/</text>
+    @Model.Address.City;
+}
+
 <div class="post">
 	@if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
-    {
+ {
         <p>
             @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) |
             @Html.ActionLink("Go back to attractions' index", "Index")
         </p>
-    }
+ }
 
     <p>@Html.Raw(Model.Description)</p>   
 <div class="post-address">
 <ul>
+    <li><b>Avg. rating:</b> @String.Format("{0:0.00}",Model.AvgRating)</li>
     <li><b>Region:</b> @Model.Address.Region</li>
     <li><b>City:</b> @Model.Address.City</li>
     <li><b>Street:</b> @Model.Address.Street @Model.Address.BuildingNumber</li>
