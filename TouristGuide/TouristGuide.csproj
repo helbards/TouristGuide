@@ -81,6 +81,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -162,6 +164,7 @@
     <Content Include="Content\images\image2.jpg" />
     <Content Include="Content\images\image3.jpg" />
     <Content Include="Content\images\image4.jpg" />
+    <Content Include="Content\images\indicator.gif" />
     <Content Include="Content\images\left_arrow.gif" />
     <Content Include="Content\images\logo.jpg" />
     <Content Include="Content\images\main_bg.gif" />
@@ -355,6 +358,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Place\EditorTemplates\Country.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TouristGuide.Providers\TouristGuide.Providers.csproj">
+      <Project>{EFF48AD1-3F50-4A41-8B7A-AA0B24ACC4B2}</Project>
+      <Name>TouristGuide.Providers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\DisplayTemplates\Attraction.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\GetAttractions.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
