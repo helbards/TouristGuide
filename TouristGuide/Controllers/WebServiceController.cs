@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace TouristGuide.Controllers
 { 
+    [WebService]
     public class WebServiceController : Controller
     {
         private TouristGuideDB db = new TouristGuideDB();

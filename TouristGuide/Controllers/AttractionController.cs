@@ -65,7 +65,7 @@ namespace TouristGuide.Controllers
             //Attraction attraction = db.Attraction.Find(id);
             //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
             //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
-            var attraction = db.Attraction.Include(r => r.Reviews).Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
+            var attraction = db.Attraction.Include(r => r.Reviews).Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates).Include(c => c.Country)
                 .Where(a => a.ID == id).SingleOrDefault();
             return View(attraction);
         }

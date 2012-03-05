@@ -5,6 +5,8 @@
     ViewBag.Title = Model.Name;
 }
 
+<link href='jquery.rating.css' type="text/css" rel="stylesheet"/>
+
 @Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null) 
 @if(Model.Address.Region != null)
 {

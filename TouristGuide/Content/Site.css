@@ -492,3 +492,8 @@ div.search-cat input[type="text"]
 {
     width: 100px;
 }
+
+.list li {
+	margin-left: 20px !important;
+	
+}

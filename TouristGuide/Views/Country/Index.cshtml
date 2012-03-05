@@ -18,20 +18,18 @@
 </form>
 </div>
 
-<table  class="table_center">
+<ul class="list">
 @foreach (var item in Model) {
-    <tr>
-        <td>
+    <li>
             @Html.ActionLink(item.Name, "Details", new { id=item.ID })
-        </td>
+        
         @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
         {
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
                 @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
+        
         }
-    </tr>
+    </li>
 }
-
-</table>
+</ul>

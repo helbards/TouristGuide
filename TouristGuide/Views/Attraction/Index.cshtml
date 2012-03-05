@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Attractions";
 }
+
+
 <script type="text/javascript">
     //pagger scrolling
     var more = true;
@@ -27,7 +29,7 @@
     }
 
     function ScrollHandler(event) {
-        if (event.target.activeElement.offsetHeight < (event.target.activeElement.scrollTop + 880) && loading == false) {
+        if (event.target.activeElement.offsetHeight < (event.target.activeElement.scrollTop + 1000) && loading == false) {
             GetPage();
         }
     }
@@ -65,6 +67,8 @@
     }
 
 </script>
+
+
 
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
