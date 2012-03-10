@@ -43,7 +43,7 @@ namespace TouristGuide.Controllers
             {
                 attractions = db.Attraction.Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place));
             }
-            else
+            else 
             {
                 attractions = db.Attraction;
             }
