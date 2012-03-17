@@ -4,7 +4,8 @@
     ViewBag.Title = Model.Name;
 }
 
-@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null)
+Country: @Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null)<br />
+@Html.ActionLink("Show Attractions", "Index", "Attraction", new { place = Model.Name },null)
 
 
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))

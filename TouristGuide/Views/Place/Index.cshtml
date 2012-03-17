@@ -19,36 +19,17 @@
 </form>
 </div>
 
-<table class="table_center">
-    <tr>
-        <th>
-            City / Region
-        </th>
-        @*<th>
-            Country
-        </th>*@
-        @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
-        {
-            <th></th>
-        }
-    </tr>
+<ul class="list">
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.Name, "Details", new { id=item.ID })
-        </td>
-        @*<td>
-            @item.Country.Name
-        </td>*@
+    <li>
+        @Html.ActionLink(item.Name, "Details", new { id=item.ID })
         @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
         {
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
                 @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
         }
-    </tr>
+    </li>
 }
 
-</table>
+</ul>

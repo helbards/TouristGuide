@@ -6,6 +6,9 @@ TouristGuide.Azure/bin
 TouristGuide.Azure/obj
 TouristGuide.Tests/bin
 TouristGuide.Tests/obj
+TouristGuide.Azure/bin
+TouristGuide.Azure/obj
+TouristGuide.Azure/csx
 TouristGuide.suo
 TouristGuide/App_Data
 TouristGuide.Providers/bin

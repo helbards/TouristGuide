@@ -13,4 +13,10 @@
     </p>
 }
 
+<div class="center">
+    @Html.ActionLink("Cities/Regions","Index","Place", new {country = Model.Name},null) | 
+    @Html.ActionLink("Attractions", "Index", "Attraction", new { country = Model.Name },null)
+</div>
+
 <p>@Html.Raw(Model.Description)</p>
+
