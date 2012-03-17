@@ -21,40 +21,58 @@ namespace TouristGuide.Controllers
         //
         // GET: /Attraction/
 
-        public ViewResult Index(string country, string place, int start = 0, int count = 20)
+        public ViewResult Index(string country, string place, string attraction, int start = 0, int count = 20)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, start, count);
+            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
             return View(attractions);
         }
 
-        private List<Attraction> FilterAttractions(string country, string place, int start, int count)
+        private List<Attraction> FilterAttractions(string country, string place, string attraction, int start, int count)
         {
-            IQueryable<Attraction> attractions;
+            IQueryable<Attraction> attractions = db.Attraction;
 
-            if (country != null && place != null)
+            if (country != null && country != "")
             {
-                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country)).Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place));
+                attractions = attractions.Where(a => a.Country != null && a.Country.Name.Contains(country));
             }
-            else if (country != null && place == null)
+            if (place != null && place != "")
             {
-                attractions = db.Attraction.Where(a => a.Country.Name.Contains(country));
+                attractions = attractions.Where(a => (a.Address.City != null && a.Address.City.Contains(place))
+                                                    || (a.Address.Region != null && a.Address.Region.Contains(place)));
             }
-            else if (country == null && place != null)
+            if (attraction != null && attraction != "")
             {
-                attractions = db.Attraction.Where(a => a.Address.City.Contains(place) || a.Address.Region.Contains(place));
-            }
-            else 
-            {
-                attractions = db.Attraction;
+                attractions = attractions.Where(x => x.Name != null && x.Name.Contains(attraction));
             }
             
             return attractions.OrderBy(x=>x.ID).Skip(start).Take(count).ToList();
         }
 
-        public ViewResult GetAttractions(string country, string place, int start, int count)
+        public ViewResult GetAttractions(string country, string place, string attraction, int start, int count)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, start, count);
+            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
             return View(attractions);
+        }
+
+        public ActionResult LookupCountry(String query, int limit = 50)
+        {
+            List<String> cats = db.Country.Where(x => x.Name.Contains(query)).Take(limit).Select(x => x.Name).ToList();
+            var retValue = cats.Select(r => new { Country = r });
+            return Json(retValue, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult LookupPlace(String query, int limit = 50)
+        {
+            List<String> cats = db.Place.Where(x => x.Name.Contains(query)).Take(limit).Select(x => x.Name).ToList();
+            var retValue = cats.Select(r => new { Place = r });
+            return Json(retValue, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult LookupAttraction(String query, int limit = 50)
+        {
+            List<String> cats = db.Attraction.Where(x => x.Name.Contains(query)).Take(limit).Select(x => x.Name).ToList();
+            var retValue = cats.Select(r => new { Attraction = r });
+            return Json(retValue, JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -62,12 +80,22 @@ namespace TouristGuide.Controllers
 
         public ViewResult Details(int id)
         {
+            var num = 10;
             //Attraction attraction = db.Attraction.Find(id);
             //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
             //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
-            var attraction = db.Attraction.Include(r => r.Reviews).Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
+            var attraction = db.Attraction.Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
                 .Where(a => a.ID == id).SingleOrDefault();
+            ViewData["Reviews"] = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x => x.Date)
+                .Take(num).ToList();            
             return View(attraction);
+        }
+
+        public ViewResult GetReviews(int id, int start, int count)
+        {
+            var rev = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x=>x.Date)
+                .Skip(start).Take(count).ToList();
+            return View(rev);
         }
 
         //

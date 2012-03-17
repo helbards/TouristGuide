@@ -371,6 +371,18 @@
   <ItemGroup>
     <Content Include="Views\Attraction\GetAttractions.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\Partial\Autocomplete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\GetReviews.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\DisplayTemplates\AttractionReview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\Partial\ShowMore.cshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -491,4 +491,18 @@ div.post-address
 div.search-cat input[type="text"]
 {
     width: 100px;
+    margin-right: 10px;
+}
+
+.ui-menu-item{
+    font-size: 12px;
+}
+
+.showMore
+{
+    border: thin solid #FFFFFF;
+    padding: 5px;
+    text-align: center;
+    width: 100px;
+    display: inline-block;
 }
