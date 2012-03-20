@@ -5,6 +5,9 @@
 	ViewBag.Title = Model.Name;
 }
 
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#showreview").click(function () {
@@ -12,12 +15,31 @@
         });
     });
 </script>
+<script type="text/javascript">
+    var map = null;
+
+    function GetMap() {
+        map = new VEMap('myMap');
+
+        var latitude = @Model.Coordinates.Latitude;
+        var longitude = @Model.Coordinates.Longitude;
+
+        map.LoadMap(new VELatLong(latitude, longitude),
+                10, VEMapStyle.Road, false);
+        map.HideScalebar();
+
+        var shape = new VEShape(VEShapeType.Pushpin, new VELatLong(latitude, longitude)); 
+        map.AddShape(shape);
+    }
+
+    onload = GetMap;    
+</script>
 
 @Html.Partial("Partial/ShowMore")
 
 @Html.HiddenFor(x => x.ID)
 
-@*@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null)*@ 
+@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null) 
 @if(Model.Address.Region != null)
 {
 	<text>/</text>
@@ -40,6 +62,7 @@
 		</p>
  }
 
+ <div id="myMap" style="position: relative; width: 300px; height: 300px; float:left; margin:10px;"></div>
 	<p>@Html.Raw(Model.Description)</p>   
 <div class="post-address">
 <ul>

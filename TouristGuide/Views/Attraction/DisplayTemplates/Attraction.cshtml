@@ -2,7 +2,7 @@
 @using TouristGuide.Helpers
            
 <div class="post">
-    <h1 class="title">@Model.Name</h1>
+    <h1 class="title">@Html.ActionLink(Model.Name,"Details", new { id = Model.ID })</h1>
     <p><b>Avg. rating:</b> @String.Format("{0:0.00}",Model.AvgRating)</p>
     <p>@Html.Raw(Html.Truncate(Model.Description, 200))</p>
     @Html.ActionLink("Read more", "Details", new { id = Model.ID }, new { @class = "more" })

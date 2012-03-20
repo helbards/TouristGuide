@@ -27,6 +27,45 @@
         $('.editor-field-images input').last().remove();
     }
 </script>
+<script type="text/javascript">
+    var map = null;
+
+    function GetMap() {
+        map = new VEMap('myMap');
+        map.AttachEvent("ondoubleclick", AddPushpin);
+
+        var latitude = @Model.Coordinates.Latitude;
+        var longitude = @Model.Coordinates.Longitude;
+        
+        map.LoadMap(new VELatLong(latitude, longitude),
+                10, VEMapStyle.Road, false);
+        map.HideScalebar();
+        
+        var shape = new VEShape(VEShapeType.Pushpin, new VELatLong(latitude, longitude)); 
+        map.AddShape(shape);        
+        
+    }
+
+    onload = GetMap;
+
+    function AddPushpin(e) {
+        map.Clear();
+        var pixel = new VEPixel(e.mapX, e.mapY);
+        var point = map.PixelToLatLong(pixel);
+
+        var pin = new VEShape(VEShapeType.Pushpin, point);
+        map.AddShape(pin);
+
+        SetLatLong(point);
+
+        return true;
+    }
+
+    function SetLatLong(point) {
+        $('#Coordinates_Latitude').val(point.Latitude);
+        $('#Coordinates_Longitude').val(point.Longitude);
+    }
+</script>
 
 @using (Html.BeginForm())
 {
@@ -56,6 +95,7 @@
             
             @Html.HiddenFor(model => model.Coordinates.ID)
 
+        <div style="display:inline-table">
         <div class="editor-label">
             @Html.LabelFor(model => model.Coordinates.Latitude)
         </div>
@@ -117,12 +157,26 @@
         <div class="editor-field">
             @Html.DropDownListFor(model => model.AttractionType.ID, new SelectList(ViewBag.AttractionTypes, "Value", "Text", Model.AttractionType.ID))
         </div>
+        </div>
+        <div style="display:inline-table; margin-left: 40px;">
+            Double click on map to pick a location.
+            <div id="myMap" style="position: relative; width: 300px; height: 300px;"></div>
+        </div>
 
     </fieldset>
     
     <fieldset>
         <legend>Photos and Video</legend>
         
+        
+        @for (int i = 0; i < Model.Images.Count(); ++i)
+        { 
+            <div style="display:inline-table">
+                    <img src="@Url.Content("~/Content/AttractionImages/" + Model.Images[i].FileName)" alt="Image #@i" style="width:100px" /><br />
+                    <input type="checkbox" name="Image_@i" id="Image_@i" /> Delete image
+            </div>
+        }
+
         <div class="editor-field-images">
             <input type="file" name="photo" />
         </div>
