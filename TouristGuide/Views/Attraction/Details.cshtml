@@ -11,13 +11,40 @@
             $("#addreview").toggle();
         });
     });
+
+    function AddReview() {
+        AttractionId = $("#AttractionID").val();
+        Author = $("#Author").val();
+        Rating = $("#Rating").val();
+        Text = $("#Text").val();
+
+        $.ajax({
+            url: '@Url.Action("ReviewCreate", "Attraction")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { AttractionId: AttractionId, Author: Author,
+                Rating: Rating, Text: Text
+            },
+            dataType: 'html',
+            success: $.proxy(ResultReview, this)
+        });
+    }
+
+    function ResultReview(data) {
+        if (data != null && data.trim() != '') {
+            $("#addreview").toggle();
+            $('#showreview').after(data);
+            $("#Text").val("");
+            $("#Rating").val("");
+        }
+    }
 </script>
 
 @Html.Partial("Partial/ShowMore")
 
 @Html.HiddenFor(x => x.ID)
 
-@*@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null)*@ 
+@Html.ActionLink(Model.Country.Name, "Details", "Country", new { id = Model.Country.ID}, null)
 @if(Model.Address.Region != null)
 {
 	<text>/</text>
@@ -102,7 +129,7 @@
 					<span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"/>
 				</div>
 				<p>
-					<input type="submit" value="Send" />
+					<input type="submit" value="Send" onclick="AddReview(); return false;" />
 				</p>
 			</fieldset>
 		}

@@ -9,25 +9,27 @@ using TouristGuide.Models;
 using System.Web.Security;
 using TouristGuide.Helpers;
 using System.IO;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace TouristGuide.Controllers
 { 
     public class AttractionController : Controller
     {
         private TouristGuideDB db = new TouristGuideDB();
-
-
+        
         #region Attractions
         //
         // GET: /Attraction/
 
-        public ViewResult Index(string country, string place, string attraction, int start = 0, int count = 20)
+        public ViewResult Index(int start = 0, int count = 20)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
+            List<Attraction> attractions = FilterAttractions(null, null, null, start, count, "rating", true);
             return View(attractions);
         }
 
-        private List<Attraction> FilterAttractions(string country, string place, string attraction, int start, int count)
+        private List<Attraction> FilterAttractions(string country, string place, string attraction, int start, 
+            int count, string sort, bool desc)
         {
             IQueryable<Attraction> attractions = db.Attraction;
 
@@ -44,13 +46,23 @@ namespace TouristGuide.Controllers
             {
                 attractions = attractions.Where(x => x.Name != null && x.Name.Contains(attraction));
             }
+
+            if (sort == "rating")
+            {
+                attractions = attractions.OrderByWithDirection(x => x.AvgRating, desc);
+            }
+            else if (sort == "leters")
+            {
+                attractions = attractions.OrderByWithDirection(x => x.Name, desc);
+            }
             
-            return attractions.OrderBy(x=>x.ID).Skip(start).Take(count).ToList();
+            return attractions.Skip(start).Take(count).ToList();
         }
 
-        public ViewResult GetAttractions(string country, string place, string attraction, int start, int count)
+        public ViewResult GetAttractions(string country, string place, string attraction, int start, int count,
+            string sort, bool desc)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
+            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count, sort, desc);
             return View(attractions);
         }
 
@@ -85,7 +97,7 @@ namespace TouristGuide.Controllers
             //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
             //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
             var attraction = db.Attraction.Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
-                .Where(a => a.ID == id).SingleOrDefault();
+                .Include(c=>c.Country).Include(c=>c.AttractionType).Where(a => a.ID == id).SingleOrDefault();
             ViewData["Reviews"] = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x => x.Date)
                 .Take(num).ToList();            
             return View(attraction);
@@ -254,16 +266,44 @@ namespace TouristGuide.Controllers
         //
         // POST: /Attraction/ReviewCreate
         [Authorize]
-        [HttpPost]
-        public ActionResult ReviewCreate(AttractionReview review)
+        public ActionResult ReviewCreate(int AttractionId, String Author, int Rating, String Text)
         {
+            AttractionReview review = new AttractionReview();
+            review.AttractionID = AttractionId;
+            review.Author = Author;
+            review.Rating = Rating;
+            review.Text = Text;
             review.Date = DateTime.Now;
+            var attraction = db.Attraction.Include(x=>x.AttractionType).Include(x=>x.Address).Include(x=>x.Coordinates)
+                .Include(x => x.Country).SingleOrDefault(x => x.ID == review.AttractionID);
+            int reviewsCount = db.AttractionReview.Where(a => a.AttractionID == review.AttractionID).Count();
+
             if (ModelState.IsValid)
             {
                 db.AttractionReview.Add(review);
-                db.SaveChanges();                
+                attraction.AvgRating = ((attraction.AvgRating * reviewsCount) + review.Rating) / (reviewsCount + 1);
+                db.SaveChanges();
             }
-            return RedirectToAction("Details", new { id = review.AttractionID });
+            //return RedirectToAction("Details", new { id = review.AttractionID });
+            return View("GetReview",review);
+        }
+
+        public ActionResult UpdateAvgRatings()
+        {
+            var attractions = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType).ToList();
+            foreach (var attraction in attractions)
+            {
+                var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID).ToList();
+                int ratingSum = 0;
+                foreach (var item in reviews)
+                {
+                    ratingSum += item.Rating;
+                }
+                if (reviews.Count() > 0)
+                    attraction.AvgRating = (double)ratingSum / reviews.Count();
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         //
@@ -271,11 +311,12 @@ namespace TouristGuide.Controllers
         [Authorize]
         public ActionResult ReviewEdit(int id)
         {
-            
+
             AttractionReview review = db.AttractionReview.Find(id);
             if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
                 return RedirectToAction("Details", new { id = review.AttractionID });
             ViewBag.Attraction = db.Attraction.Find(review.AttractionID);
+            ViewBag.currentRating = review.Rating;
             return View(review);
         }
 
@@ -283,11 +324,20 @@ namespace TouristGuide.Controllers
         // POST: /Attraction/ReviewEdit/5
         [Authorize]
         [HttpPost]
-        public ActionResult ReviewEdit(AttractionReview review)
+        public ActionResult ReviewEdit(AttractionReview review, int oldRating)
         {
             if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
                 return RedirectToAction("Details", new { id = review.AttractionID });
+
             db.Entry(review).State = EntityState.Modified;
+
+            //update avg rating
+            var attraction = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType)
+                .Include(r => r.Reviews).Where(x => x.ID == review.AttractionID).SingleOrDefault();
+            int reviewsCount = attraction.Reviews.Count();
+            attraction.AvgRating = (attraction.AvgRating * reviewsCount - oldRating + review.Rating) / reviewsCount;
+            //end of update
+
             db.SaveChanges();
             return RedirectToAction("Details", new { id = review.AttractionID });
         }
@@ -313,12 +363,18 @@ namespace TouristGuide.Controllers
             AttractionReview review = db.AttractionReview.Find(id);
             if (!review.Author.Equals(Membership.GetUser().UserName) && !Roles.IsUserInRole(Membership.GetUser().UserName, "admin"))
                 return RedirectToAction("Details", new { id = review.AttractionID });
+            //update avg rating
+            var attraction = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType)
+                .Include(r => r.Reviews).Where(x => x.ID == review.AttractionID).SingleOrDefault();
+            int reviewsCount = attraction.Reviews.Count();
+            attraction.AvgRating = (attraction.AvgRating * reviewsCount - review.Rating) / (reviewsCount - 1);
+            //end of update
             db.AttractionReview.Remove(review);
             db.SaveChanges();
             return RedirectToAction("Details", new { id = review.AttractionID });
         }
 
-        #endregion Reviews
+        #endregion
 
         #region Helpers
 

@@ -17,25 +17,31 @@ namespace TouristGuide.Controllers
         //
         // GET: /Place/
 
-        public ViewResult Index(string country, string place)
+        public ViewResult Index(int start = 0, int count = 20)
         {
-            List<Place> places;
-            if (country != null && place == null)
+            List<Place> places = FilterPlaces(null, null, start, count);
+            return View(places);
+        }
+
+        private List<Place> FilterPlaces(string country, string place, int start, int count)
+        {
+            IQueryable<Place> places = db.Place.Include(c => c.Country).Include(c => c.Coordinates);
+
+            if (country != null && country != "")
             {
-                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Country.Name.Contains(country)).ToList();
+                places = places.Where(a => a.Country != null && a.Country.Name.Contains(country));
             }
-            else if (country == null && place != null)
+            if (place != null && place != "")
             {
-                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Name.Contains(place)).ToList();
+                places = places.Where(a => a.Name.Contains(place));
             }
-            else if (country != null && place != null)
-            {
-                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).Where(p => p.Name.Contains(place) && p.Country.Name.Contains(country)).ToList();
-            }
-            else
-            {
-                places = db.Place.Include(c => c.Country).Include(c => c.Coordinates).ToList();
-            }
+
+            return places.OrderBy(x => x.Name).Skip(start).Take(count).ToList();
+        }
+
+        public ViewResult GetPlaces(string country, string place, int start, int count)
+        {
+            List<Place> places = FilterPlaces(country, place, start, count);
             return View(places);
         }
 

@@ -16,11 +16,39 @@
     var country = '';
     var place = '';
     var attr = '';
+    var sort = 'rating';
+    var sortDesc = true;
 
     $(document).ready(function () {
         country = $("#country").val();
         place = $("#place").val();
         attr = $("#attraction").val();
+
+        $("#sortByRating").click(function () {
+            if (sort == 'rating') {
+                sortDesc = sortDesc ? false : true;
+            }
+            else {
+                $("#sortByRating").text('[avg rating]');
+                $("#sortByLeters").text('alphbetically');
+                sortDesc = true;
+                sort = 'rating';
+            }
+            Sort();
+        });
+
+        $("#sortByLeters").click(function () {
+            if (sort == 'leters') {
+                sortDesc = sortDesc ? false : true;
+            }
+            else {
+                $("#sortByRating").text('avg rating');
+                $("#sortByLeters").text('[alphbetically]');
+                sortDesc = false;
+                sort = 'leters';
+            }
+            Sort();
+        });
 
         if ($('.post').length < count) {
             more = false;
@@ -73,7 +101,7 @@
             type: 'GET',
             contentType: 'application/json',
             data: { country: country, place: place,
-                attraction: attr, start: start, count: count
+                attraction: attr, start: start, count: count, sort: sort, desc: sortDesc
             },
             dataType: 'html',
             success: $.proxy(Results, this)
@@ -99,13 +127,41 @@
         }
     }
 
+    function Sort() {
+        $(".post").remove();
+
+        more = true;
+        loading = true;
+        start = 0;
+        GetAtt();
+    }
+
+    function Filter() {
+        country = $("#country").val();
+        place = $("#place").val();
+        attr = $("#attraction").val();
+
+        $(".post").remove();
+
+        more = true;
+        loading = true;
+        start = 0;
+        GetAtt();
+    }
+
 </script>
 @Html.Partial("Partial/Autocomplete")
 
+<div class="left border-bottom search-cat">
+    <p>
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
-    <p>@Html.ActionLink("Add attraction", "Create")</p>
+    @Html.ActionLink("Add attraction", "Create")@: |
 }
+    Sort by: 
+        <a id="sortByRating">[avg rating]</a> | <a id="sortByLeters">alphbetically</a>
+    </p>
+</div>
 
 <div class="center border-bottom search-cat">
 @using (Html.BeginForm())
@@ -116,7 +172,7 @@
     @Html.TextBox("place") 
     <text>Attraction:</text>
     @Html.TextBox("attraction", null, new { @style="width: 150px;" }) 
-    <input type="submit" value="Filter" />
+    <input type="submit" value="Filter" onclick="Filter(); return false;" />
 }
 </div>
 

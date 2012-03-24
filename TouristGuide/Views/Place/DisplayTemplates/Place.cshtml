@@ -1,0 +1,10 @@
+﻿@model TouristGuide.Models.Place
+           
+<li>
+    @Html.ActionLink(Model.Name, "Details", new { id = Model.ID })
+    @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) <text>|</text>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
+    }
+</li>

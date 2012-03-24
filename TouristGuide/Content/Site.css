@@ -506,3 +506,7 @@ div.search-cat input[type="text"]
     width: 100px;
     display: inline-block;
 }
+
+.list li {
+    margin-left: 20px;
+}
