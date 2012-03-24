@@ -13,23 +13,52 @@
 
 <div class="center border-bottom search-cat">
 <form action="/Country/Index" method="get">
-    Country: <input type="text" name="country" />
-    <input type="submit" value="Filter" />
+<div style="font-size:20px;margin-bottom:20px;">Filter country </div>
+   <span style="font-size:16px;padding-right:5px;">Country:</span> <input type="text" name="country" />
+    <input type="submit" value="Filter" style="margin-left:20px;color:Gray;"/>
 </form>
 </div>
 
-<ul class="list">
+<div  class="table_center">
+<span style="font-size:20px;">Countries</span>
+
+<div style="margin-top:20px;">
+
 @foreach (var item in Model) {
-    <li>
-            @Html.ActionLink(item.Name, "Details", new { id=item.ID })
-        
-        @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+    
+        <div class="countryBar" name=@item.ID>
+        <span style="color:White;font-size:20px;">@item.Name</span>
+          @*  @Html.ActionLink(item.Name, "Details", new { id = item.ID ,style="color:white;"})*@
+        </div>
+        if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
         {
-        
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
+            <div>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-        
+            </div>
         }
-    </li>
+   
 }
-</ul>
+
+</div>
+</div>
+<script type="text/javascript">
+
+    $(".countryBar").click(function () {
+        var id = $(this).attr("name");
+        var url = "/country/details/";
+        window.location.replace(url + id);
+    });
+
+    $(".countryBar").hover(
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryOrangeDark.png)");
+  },
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryOrange.png)");
+  });
+
+
+  
+
+</script>

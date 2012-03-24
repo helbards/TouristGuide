@@ -13,23 +13,77 @@
 
 <div class="center border-bottom">
 <form action="/Place/Index" method="get">
-    Country: <input type="text" name="country" />
-    City/Region: <input type="text" name="place" />
-    <input type="submit" value="Filter" />
+<div style="font-size:20px;margin-bottom:20px;">Filter City/Region</div>
+      <span style="font-size:16px;padding-right:5px;">country:</span><input type="text" name="country" />
+     <span style="font-size:16px;padding-right:5px;margin-left:20px;">city/region:</span> <input type="text" name="place" />
+    <input type="submit" value="Filter" style="margin-left:20px;color:Gray;"/>
 </form>
 </div>
 
-<ul class="list">
+<div class="table_center">
+  
+     
+       <span style="font-size:20px;">Cities / Regions</span> 
 
-@foreach (var item in Model) {
-    <li>
-        @Html.ActionLink(item.Name, "Details", new { id=item.ID })
+           
+       
+        @*<th>
+            Country
+        </th>*@
         @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
         {
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+           <div>
+           admin
+           </div>
         }
-    </li>
+  
+  <div style="margin-top:20px;">
+@foreach (var item in Model) {
+     <div class="regionBar" name=@item.ID>
+        <span style="color:White;font-size:20px;">@item.Name</span>
+          @*  @Html.ActionLink(item.Name, "Details", new { id = item.ID ,style="color:white;"})*@
+        </div>
+        
+           @* @Html.ActionLink(item.Name, "Details", new { id=item.ID })*@
+       
+        @*<td>
+            @item.Country.Name
+        </td>*@
+        if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+        {
+            <div>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </div>
+        }
+  
 }
+</div>
+</div>
 
-</ul>
+<script type="text/javascript">
+
+    $(".regionBar").click(function () {
+        var id = $(this).attr("name");
+        var url = "/place/details/";
+        window.location.replace(url + id);
+    });
+
+
+    $(".regionBar").hover(
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryGreenDark.png)");
+      $(this).css("cursor", "pointer");
+
+  },
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryGreen.png)");
+      $(this).css("cursor", "auto");
+  });
+
+
+ 
+
+
+
+</script>

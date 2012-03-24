@@ -110,13 +110,14 @@
 <div class="center border-bottom search-cat">
 @using (Html.BeginForm())
 {
-    <text>Country:</text>
+    <div style="font-size:20px;margin-bottom:20px;">Filter Attractions</div>
+   <span style="font-size:16px;padding-right:5px;padding-left:5px;">Country:</span>
     @Html.TextBox("country") 
-    <text>City/Region:</text>
+ <span style="font-size:16px;padding-right:5px;padding-left:5px;">City/Region:</span>
     @Html.TextBox("place") 
-    <text>Attraction:</text>
-    @Html.TextBox("attraction", null, new { @style="width: 150px;" }) 
-    <input type="submit" value="Filter" />
+   <span style="font-size:16px;padding-right:5px;padding-left:5px;">Attraction:</span>
+    @Html.TextBox("attraction")
+      <input type="submit" value="Filter" style="margin:20px;color:Gray;"/>
 }
 </div>
 

@@ -153,24 +153,26 @@ namespace TouristGuide.Controllers
             ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
             ViewBag.Countries = DbHelpers.GetCountriesToList();
             Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Include(c => c.Coordinates).Include(a => a.Address).Include(i => i.Images).Where(a => a.ID == id).SingleOrDefault();
-            return View(attraction);
+            AttractionEditViewModel attractionEdit = new AttractionEditViewModel();
+            attractionEdit.Attraction = attraction;
+            return View(attractionEdit);
         }
 
         //
         // POST: /Attraction/Edit/5
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Edit(Attraction attraction)
+        public ActionResult Edit(AttractionEditViewModel attractionEdit)
         {
-            var updatedAttraction = db.Attraction.Include(a => a.AttractionType).Include(c => c.Country).Include(c => c.Coordinates).Include(a => a.Address).Where(x => x.ID == attraction.ID).SingleOrDefault();
-            updatedAttraction.AttractionType = db.AttractionType.Find(attraction.AttractionType.ID);
-            updatedAttraction.Country = db.Country.Find(attraction.Country.ID);
-            updatedAttraction.Coordinates.Latitude = attraction.Coordinates.Latitude;
-            updatedAttraction.Coordinates.Longitude = attraction.Coordinates.Longitude;
-            updatedAttraction.Address = attraction.Address;
+            var updatedAttraction = db.Attraction.Include(a => a.AttractionType).Include(c => c.Country).Include(c => c.Coordinates).Include(a => a.Address).Where(x => x.ID == attractionEdit.Attraction.ID).SingleOrDefault();
+            updatedAttraction.AttractionType = db.AttractionType.Find(attractionEdit.Attraction.AttractionType.ID);
+            updatedAttraction.Country = db.Country.Find(attractionEdit.Attraction.Country.ID);
+            updatedAttraction.Coordinates.Latitude = attractionEdit.Attraction.Coordinates.Latitude;
+            updatedAttraction.Coordinates.Longitude = attractionEdit.Attraction.Coordinates.Longitude;
+            updatedAttraction.Address = attractionEdit.Attraction.Address;
             db.Entry(updatedAttraction).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = updatedAttraction.ID });
         }
 
         //

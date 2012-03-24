@@ -1,21 +1,21 @@
 ﻿@model TouristGuide.Models.RegisterModel
 
 @{
-    ViewBag.Title = "Create account";
+    ViewBag.Title = "Register";
 }
 
 <p>
-    The password must be at least @Membership.MinRequiredPasswordLength characters long.
+    * Password needs to have at least @Membership.MinRequiredPasswordLength characters.
 </p>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 
 @using (Html.BeginForm()) {
-    @Html.ValidationSummary(true, "The account was not created. Correct all errors and try again.")
+    @Html.ValidationSummary(true, "Tworzenie konta się nie powiodło. Proszę poprawić błędy i spróbowac ponownie.")
     <div>
         <fieldset>
-            <legend>Personal information</legend>
+            <legend style="font-size:20px;">Account Information</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(m => m.UserName)
@@ -50,7 +50,7 @@
             </div>
 
             <p>
-                <input type="submit" value="Create account" />
+                <input type="submit" value="register" style="color:Gray;"/>
             </p>
         </fieldset>
     </div>

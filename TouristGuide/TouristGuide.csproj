@@ -136,6 +136,7 @@
     <Compile Include="Helpers\DbHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Attraction.cs" />
+    <Compile Include="Models\AttractionEditViewModel.cs" />
     <Compile Include="Models\AttractionImage.cs" />
     <Compile Include="Models\AttractionType.cs" />
     <Compile Include="Models\AttractionReview.cs" />
@@ -153,10 +154,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\404.jpg" />
+    <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\bullet.gif" />
+    <Content Include="Content\images\city.png" />
+    <Content Include="Content\images\city2.png" />
     <Content Include="Content\images\comments.gif" />
+    <Content Include="Content\images\countryGreen.png" />
+    <Content Include="Content\images\countryGreenDark.png" />
+    <Content Include="Content\images\countryLemon.png" />
+    <Content Include="Content\images\countryLemonDark.png" />
+    <Content Include="Content\images\countryOrange.png" />
+    <Content Include="Content\images\countryOrangeDark.png" />
+    <Content Include="Content\images\countryViolet.png" />
+    <Content Include="Content\images\countryVioletDark.png" />
+    <Content Include="Content\images\DarkTitleBg.png" />
     <Content Include="Content\images\end_bg.jpg" />
     <Content Include="Content\images\footer_bg.jpg" />
+    <Content Include="Content\images\globe.png" />
+    <Content Include="Content\images\globeLogo.png" />
+    <Content Include="Content\images\GrayGreenBg.png" />
     <Content Include="Content\images\header_bg.jpg" />
     <Content Include="Content\images\icon_facebook.jpg" />
     <Content Include="Content\images\icon_youtube.png" />
@@ -167,6 +183,8 @@
     <Content Include="Content\images\indicator.gif" />
     <Content Include="Content\images\left_arrow.gif" />
     <Content Include="Content\images\logo.jpg" />
+    <Content Include="Content\images\logo4szerokie.png" />
+    <Content Include="Content\images\logo4szerokie2.png" />
     <Content Include="Content\images\main_bg.gif" />
     <Content Include="Content\images\main_top.jpg" />
     <Content Include="Content\images\menu_bg.jpg" />
@@ -178,6 +196,11 @@
     <Content Include="Content\images\right_arrow.gif" />
     <Content Include="Content\images\separate_line.gif" />
     <Content Include="Content\images\sidebar_top.png" />
+    <Content Include="Content\images\tile.png" />
+    <Content Include="Content\images\tileDarkBlue.png" />
+    <Content Include="Content\images\tileDarker.png" />
+    <Content Include="Content\images\tileLighter.png" />
+    <Content Include="Content\images\tileLighter2.png" />
     <Content Include="Content\images\title.png" />
     <Content Include="Content\images\title1.gif" />
     <Content Include="Content\images\title2.gif" />
@@ -378,6 +401,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Attraction\Partial\ShowMore.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\fonts\SegoeWP-Black.ttf" />
+    <None Include="Content\fonts\SegoeWP-Bold.ttf" />
+    <None Include="Content\fonts\SegoeWP-Light.ttf" />
+    <None Include="Content\fonts\SegoeWP-Semibold.ttf" />
+    <None Include="Content\fonts\SegoeWP-Semilight.ttf" />
+    <None Include="Content\fonts\SegoeWP.ttf" />
+    <None Include="Content\fonts\SegoeWPN-Black.ttf" />
+    <None Include="Content\fonts\SegoeWPN-Bold.ttf" />
+    <None Include="Content\fonts\SegoeWPN-Light.ttf" />
+    <None Include="Content\fonts\SegoeWPN-Semibold.ttf" />
+    <None Include="Content\fonts\SegoeWPN-Semilight.ttf" />
+    <None Include="Content\fonts\SegoeWPN.ttf" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
