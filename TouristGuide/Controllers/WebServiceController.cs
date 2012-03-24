@@ -18,22 +18,28 @@ namespace TouristGuide.Controllers
 
         // GET: /WebService/GetAttractions?place=Name
         [WebMethod]
-        public JsonResult GetAttractions(string place)
+        public JsonResult GetAttractions(string place, int start, int count)
         {
-            List<Attraction> attractions;
+            var attractions =  db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address);
+
             if(place!=null)
-                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).
-                    Where(p => p.Address.City == place || p.Address.Region == place).ToList();
-            else
-                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).ToList();
-            foreach(var attr in attractions)
-                attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
-            return Json(attractions, JsonRequestBehavior.AllowGet);
+            {
+                attractions =  attractions.Where(p => p.Address.City == place || p.Address.Region == place);
+            }
+
+            var attrs = attractions.OrderByDescending(x=>x.AvgRating).Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value,2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetAttractionsByIds?ids=id1,id2
         [WebMethod]
-        public JsonResult GetAttractionsByIds(string ids)
+        public JsonResult GetAttractionsByIds(string ids, int start, int count)
         {
             List<Attraction> attractions;
             string[] Ids = ids.Split(',');
@@ -44,7 +50,15 @@ namespace TouristGuide.Controllers
                 Where(a => Ids_int.Contains(a.ID)).ToList();
             foreach (var attr in attractions)
                 attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
-            return Json(attractions, JsonRequestBehavior.AllowGet);
+            //return Json(attractions, JsonRequestBehavior.AllowGet);
+            var attrs = attractions.OrderByDescending(x => x.AvgRating).Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value, 2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetAttractions/2
@@ -54,7 +68,8 @@ namespace TouristGuide.Controllers
             var attraction = db.Attraction.Include(a => a.Address).Include(i => i.Images).Include(c => c.Coordinates).
                 Where(x => x.ID == id).SingleOrDefault();
             attraction.Description = Regex.Replace(attraction.Description, @"<.*?>", string.Empty);
-            return Json(attraction, JsonRequestBehavior.AllowGet);
+            //return Json(attraction, JsonRequestBehavior.AllowGet);
+            return Json(new { attraction = attraction }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetAttractions?name=Name
@@ -64,12 +79,38 @@ namespace TouristGuide.Controllers
             var attraction = db.Attraction.Include(c => c.Country).Include(a => a.Address).
                 Where(x => x.Name == name).SingleOrDefault();
             attraction.Description = Regex.Replace(attraction.Description, @"<.*?>", string.Empty);
-            return Json(attraction, JsonRequestBehavior.AllowGet);
+            //return Json(attraction, JsonRequestBehavior.AllowGet);
+            return Json(new { attraction = attraction }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /WebService/GetAttractionsByPlaceId/3
+        // GET: /WebService/GetAttractionsByType
         [WebMethod]
-        public JsonResult GetAttractionsByPlace(string name)
+        public JsonResult GetAttractionsByType(string type, int start, int count)
+        {
+            List<Attraction> attractions;
+            if (type != null)
+            {
+                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).
+                    Where(p => p.AttractionType.Name == type).ToList();
+            }
+            else
+                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).ToList();
+            foreach (var attr in attractions)
+                attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
+            //return Json(attractions, JsonRequestBehavior.AllowGet);
+            var attrs = attractions.OrderByDescending(x => x.AvgRating).Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value, 2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /WebService/GetAttractionsByPlace
+        [WebMethod]
+        public JsonResult GetAttractionsByPlace(string name, int start, int count)
         {
             List<Attraction> attractions;
             if (name!=null)
@@ -81,25 +122,61 @@ namespace TouristGuide.Controllers
                 attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).ToList();
             foreach (var attr in attractions)
                 attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
-            return Json(attractions, JsonRequestBehavior.AllowGet);
+            //return Json(attractions, JsonRequestBehavior.AllowGet);
+            var attrs = attractions.OrderByDescending(x => x.AvgRating).Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value, 2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /WebService/GetAttractionsByCountry
+        [WebMethod]
+        public JsonResult GetAttractionsByCountry(string country, int start, int count)
+        {
+            List<Attraction> attractions;
+            if (country != null)
+            {
+                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).
+                    Where(p => p.Country.Name == country).ToList();
+            }
+            else
+                attractions = db.Attraction.Include(c => c.Coordinates).Include(c => c.Country).Include(a => a.Address).ToList();
+            foreach (var attr in attractions)
+                attr.Description = Regex.Replace(attr.Description, @"<.*?>", string.Empty);
+            //return Json(attractions, JsonRequestBehavior.AllowGet);
+            var attrs = attractions.OrderByDescending(x => x.AvgRating).Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value, 2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetAttractionsByPlaceId/3
         [WebMethod]
-        public JsonResult GetAttractionsByPlaceId(int id=-1)
+        public JsonResult GetAttractionsByPlaceId(int start, int count, int id=-1)
         {
-            List<AttractionViewModel> attractions;
+            var attractions = db.Attraction.Include(x => x.Address);
             if (id != -1)
             {
                 var place = db.Place.Find(id);
-                attractions = db.Attraction.Where(p => p.Address.City == place.Name || p.Address.Region == place.Name).
-                    Select(x => new AttractionViewModel() { ID = x.ID, Name = x.Name }).ToList();
+                attractions = attractions.Where(p => p.Address.City == place.Name || p.Address.Region == place.Name);
             }
-            else
+            //return Json(attractions, JsonRequestBehavior.AllowGet);
+            var attrs = attractions.OrderByDescending(x => x.AvgRating).Skip(start).Take(count).Select(x => new
             {
-                attractions = db.Attraction.Select(x => new AttractionViewModel() { ID = x.ID, Name = x.Name }).ToList();
-            }
-            return Json(attractions, JsonRequestBehavior.AllowGet);
+                ID = x.ID,
+                Name = x.Name,
+                AvgRating = x.AvgRating.HasValue ? Math.Round(x.AvgRating.Value, 2) : 0.0
+            });
+
+            return Json(new { attractions = attrs.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetPlace/3
@@ -108,21 +185,24 @@ namespace TouristGuide.Controllers
         {
             var place = db.Place.Find(id);
             place.Description = Regex.Replace(place.Description, @"<.*?>", string.Empty);
-            return Json(place, JsonRequestBehavior.AllowGet);
+            //return Json(place, JsonRequestBehavior.AllowGet);
+            return Json(new { place = place }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetPlaces?country=Name
         [WebMethod]
-        public JsonResult GetPlaces(string country)
+        public JsonResult GetPlaces(string country, int start, int count)
         {
-            List<Place> places;
+            var places = db.Place.Include(x => x.Country);
             if(country!=null)
-                places = db.Place.Where(p => p.Country.Name == country).ToList();
-            else
-                places = db.Place.ToList();
-            foreach (var p in places)
-                p.Description = Regex.Replace(p.Description, @"<.*?>", string.Empty);
-            return Json(places, JsonRequestBehavior.AllowGet);
+                places = places.Where(p => p.Country.Name == country);
+            //return Json(places, JsonRequestBehavior.AllowGet);
+            var placs = places.Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name
+            });
+            return Json(new { places = places.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetCountry/3
@@ -131,17 +211,21 @@ namespace TouristGuide.Controllers
         {
             var country = db.Country.Find(id);
             country.Description = Regex.Replace(country.Description, @"<.*?>", string.Empty);
-            return Json(country, JsonRequestBehavior.AllowGet);
+            //return Json(country, JsonRequestBehavior.AllowGet);
+            return Json(new { country = country }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetCountries
         [WebMethod]
-        public JsonResult GetCountries()
+        public JsonResult GetCountries(int start, int count)
         {
-            var countries = db.Country.ToList();
-            foreach (var c in countries)
-                c.Description = Regex.Replace(c.Description, @"<.*?>", string.Empty);
-            return Json(countries, JsonRequestBehavior.AllowGet);
+            var countries = db.Country.Skip(start).Take(count).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name
+            });
+            //return Json(countries, JsonRequestBehavior.AllowGet);
+            return Json(new { countries = countries.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

@@ -96,8 +96,10 @@ namespace TouristGuide.Controllers
             //Attraction attraction = db.Attraction.Find(id);
             //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
             //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
+
             var attraction = db.Attraction.Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
                 .Include(c=>c.Country).Include(c=>c.AttractionType).Where(a => a.ID == id).SingleOrDefault();
+
             ViewData["Reviews"] = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x => x.Date)
                 .Take(num).ToList();            
             return View(attraction);
@@ -154,7 +156,7 @@ namespace TouristGuide.Controllers
 
             db.Attraction.Add(attraction);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = attraction.ID });
         }
         
         //
@@ -164,25 +166,27 @@ namespace TouristGuide.Controllers
         {
             ViewBag.AttractionTypes = DbHelpers.GetAttractionTypesToList();
             ViewBag.Countries = DbHelpers.GetCountriesToList();
-            Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Include(c => c.Coordinates).Include(a => a.Address).Where(a => a.ID == id).SingleOrDefault();
-            return View(attraction);
+            Attraction attraction = db.Attraction.Include(c => c.Country).Include(t => t.AttractionType).Include(c => c.Coordinates).Include(a => a.Address).Include(i => i.Images).Where(a => a.ID == id).SingleOrDefault();
+            AttractionEditViewModel attractionEdit = new AttractionEditViewModel();
+            attractionEdit.Attraction = attraction;
+            return View(attractionEdit);
         }
 
         //
         // POST: /Attraction/Edit/5
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Edit(Attraction attraction)
+        public ActionResult Edit(AttractionEditViewModel attractionEdit)
         {
-            var updatedAttraction = db.Attraction.Include(a => a.AttractionType).Include(c => c.Country).Include(c => c.Coordinates).Include(a => a.Address).Where(x => x.ID == attraction.ID).SingleOrDefault();
-            updatedAttraction.AttractionType = db.AttractionType.Find(attraction.AttractionType.ID);
-            updatedAttraction.Country = db.Country.Find(attraction.Country.ID);
-            updatedAttraction.Coordinates.Latitude = attraction.Coordinates.Latitude;
-            updatedAttraction.Coordinates.Longitude = attraction.Coordinates.Longitude;
-            updatedAttraction.Address = attraction.Address;
+            var updatedAttraction = db.Attraction.Include(a => a.AttractionType).Include(c => c.Country).Include(c => c.Coordinates).Include(a => a.Address).Where(x => x.ID == attractionEdit.Attraction.ID).SingleOrDefault();
+            updatedAttraction.AttractionType = db.AttractionType.Find(attractionEdit.Attraction.AttractionType.ID);
+            updatedAttraction.Country = db.Country.Find(attractionEdit.Attraction.Country.ID);
+            updatedAttraction.Coordinates.Latitude = attractionEdit.Attraction.Coordinates.Latitude;
+            updatedAttraction.Coordinates.Longitude = attractionEdit.Attraction.Coordinates.Longitude;
+            updatedAttraction.Address = attractionEdit.Attraction.Address;
             db.Entry(updatedAttraction).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = updatedAttraction.ID });
         }
 
         //
@@ -274,8 +278,10 @@ namespace TouristGuide.Controllers
             review.Rating = Rating;
             review.Text = Text;
             review.Date = DateTime.Now;
+
             var attraction = db.Attraction.Include(x=>x.AttractionType).Include(x=>x.Address).Include(x=>x.Coordinates)
                 .Include(x => x.Country).SingleOrDefault(x => x.ID == review.AttractionID);
+
             int reviewsCount = db.AttractionReview.Where(a => a.AttractionID == review.AttractionID).Count();
 
             if (ModelState.IsValid)
@@ -294,6 +300,24 @@ namespace TouristGuide.Controllers
             foreach (var attraction in attractions)
             {
                 var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID).ToList();
+                int ratingSum = 0;
+                foreach (var item in reviews)
+                {
+                    ratingSum += item.Rating;
+                }
+                if (reviews.Count() > 0)
+                    attraction.AvgRating = (double)ratingSum / reviews.Count();
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult UpdateAvgRatings()
+        {
+            var attractions = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType);
+            foreach (var attraction in attractions)
+            {
+                var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID);
                 int ratingSum = 0;
                 foreach (var item in reviews)
                 {

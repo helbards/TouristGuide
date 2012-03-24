@@ -123,12 +123,46 @@
 
 <div class="center border-bottom">
 <form action="/Place/Index" method="get">
-    Country: <input type="text" name="country" id="country" />
-    City/Region: <input type="text" name="place" id ="place" />
-    <input type="submit" value="Filter" onclick="Filter(); return false;" />
+<div style="font-size:20px;margin-bottom:20px;">Filter City/Region</div>
+      <span style="font-size:16px;padding-right:5px;">country:</span><input type="text" name="country" id="country" />
+     <span style="font-size:16px;padding-right:5px;margin-left:20px;">city/region:</span> <input type="text" name="place" id ="place" />
+    <input type="submit" value="Filter" onclick="Filter(); return false;" style="margin-left:20px;color:Gray;"/>
 </form>
 </div>
 
-<ul class="list">
+<div class="table_center">
+  
+     
+       <span style="font-size:20px;">Cities / Regions</span>
+  
+  <div style="margin-top:20px;">
     @Html.DisplayFor(x=>x)
-</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+
+    $(".regionBar").click(function () {
+        var id = $(this).attr("name");
+        var url = "/place/details/";
+        window.location.replace(url + id);
+    });
+
+
+    $(".regionBar").hover(
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryGreenDark.png)");
+      $(this).css("cursor", "pointer");
+
+  },
+  function () {
+      $(this).css("background-image", "url(/Content/images/countryGreen.png)");
+      $(this).css("cursor", "auto");
+  });
+
+
+ 
+
+
+
+</script>

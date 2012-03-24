@@ -12,6 +12,7 @@ namespace TouristGuide.Models
         public Attraction()
         {
             Images = new List<AttractionImage>();
+            Reviews = new List<AttractionReview>();
         }
 
         public int ID { get; set; }
