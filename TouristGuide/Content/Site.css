@@ -642,10 +642,6 @@ div.search-cat input[type="text"]
     width: 100px;
 }
 
-div.search-cat p a:hover {
-	cursor: pointer;
-}
-
 /*------------------*/
 .countryObject
 {
@@ -718,6 +714,19 @@ text-align:center;
 font-family:Segoe WP Semibold;
 }
 
+.regionResults
+{
+ margin:auto;
+ margin-bottom:10px;
+ font-size:16px;
+ color:gray;
+ padding:10px;   
+ background-image: url(images/countryGreen.png);
+-moz-border-radius: 20px;
+border-radius: 20px;
+text-align:center;
+font-family:Segoe WP Semibold;
+}
 
 #logInTile
 {
@@ -777,8 +786,8 @@ text-align:center;
     background-position:center;
     background-image:url('/Content/images/grayGreenBg.png');
      -moz-border-radius: 20px;
-border-radius: 20px;
-padding:20px;
+    border-radius: 20px;
+    padding:20px;
 }
 
 @font-face
@@ -810,7 +819,3 @@ padding:20px;
     display: none;
 }
 
-#showreview:hover {
-	cursor: pointer;
-	
-}

@@ -17,9 +17,9 @@ namespace TouristGuide.Controllers
         //
         // GET: /Place/
 
-        public ViewResult Index(int start = 0, int count = 20)
+        public ViewResult Index(string country, int start = 0, int count = 20)
         {
-            List<Place> places = FilterPlaces(null, null, start, count);
+            List<Place> places = FilterPlaces(country, null, start, count);
             return View(places);
         }
 

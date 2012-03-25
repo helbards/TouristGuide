@@ -18,6 +18,7 @@
     var place = '';
 
     $(document).ready(function () {
+        $("#country").val('@Request.QueryString["country"]');
         country = $("#country").val();
         place = $("#place").val();
 
@@ -115,12 +116,14 @@
         else {
             more = false;
             HideLoading();
+            $("#noResults").attr("style", "");
         }
     }
 
     function Filter() {
         country = $("#country").val();
         place = $("#place").val();
+        $("#noResults").attr("style", "display:none;");
 
         $(".regionBar").remove();
         ShowLoading();
@@ -159,7 +162,19 @@
            </div>
         }
   
-  <div style="margin-top:20px;">
+  <div style="margin-top:20px;">  
+    <div id="noResults" class="regionResults"
+    @if (Model == null || (Model != null && Model.Count() == 0))
+    {
+        @:>
+    }
+    else
+    { 
+        @: style="display:none;">
+    }
+        <span style="color: White; font-size: 20px;">No results found.</span>
+    </div>
+
     @Html.DisplayFor(x=>x)
   </div>
 </div>

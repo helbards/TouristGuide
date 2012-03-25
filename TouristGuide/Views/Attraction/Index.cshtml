@@ -20,6 +20,8 @@
     var sortDesc = true;
 
     $(document).ready(function () {
+        $("#country").val('@Request.QueryString["country"]');
+        $("#place").val('@Request.QueryString["place"]');
         country = $("#country").val();
         place = $("#place").val();
         attr = $("#attraction").val();
@@ -124,6 +126,7 @@
         else {
             more = false;
             HideLoading();
+            $("#noResults").attr("style", "");
         }
     }
 
@@ -140,6 +143,7 @@
         country = $("#country").val();
         place = $("#place").val();
         attr = $("#attraction").val();
+        $("#noResults").attr("style", "display:none;");
 
         $(".post").remove();
 
@@ -178,3 +182,15 @@
 </div>
 
 @Html.DisplayFor(m => m)
+
+<div id="noResults" class="attractionsLemonBg"
+@if (Model == null || (Model != null && Model.Count() == 0))
+{
+    @:>
+}
+else
+{ 
+    @: style="display:none;">
+}
+    <h1 style="color:#9BB45E;" class="attractionTitleDarkLemonBg">No results found.</h1>
+</div>
