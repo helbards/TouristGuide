@@ -22,9 +22,9 @@ namespace TouristGuide.Controllers
         //
         // GET: /Attraction/
 
-        public ViewResult Index(int start = 0, int count = 20)
+        public ViewResult Index(string country, string place, int start = 0, int count = 20)
         {
-            List<Attraction> attractions = FilterAttractions(null, null, null, start, count, "rating", true);
+            List<Attraction> attractions = FilterAttractions(country, place, null, start, count, "rating", true);
             return View(attractions);
         }
 
