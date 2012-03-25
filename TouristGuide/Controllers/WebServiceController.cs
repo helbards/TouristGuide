@@ -197,12 +197,12 @@ namespace TouristGuide.Controllers
             if(country!=null)
                 places = places.Where(p => p.Country.Name == country);
             //return Json(places, JsonRequestBehavior.AllowGet);
-            var placs = places.Skip(start).Take(count).Select(x => new
+            var placs = places.OrderBy(x=>x.Name).Skip(start).Take(count).Select(x => new
             {
                 ID = x.ID,
                 Name = x.Name
             });
-            return Json(new { places = places.ToList() }, JsonRequestBehavior.AllowGet);
+            return Json(new { places = placs.ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /WebService/GetCountry/3

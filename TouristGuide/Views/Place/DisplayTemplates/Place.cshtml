@@ -2,7 +2,6 @@
            
 <div class="regionBar" name="@Model.ID">
     <span style="color: White; font-size: 20px;">@Model.Name</span> @*  @Html.ActionLink(item.Name, "Details", new { id = item.ID ,style="color:white;"})*@
-</div>
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
 <div>
@@ -10,3 +9,4 @@
     @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
 </div>
 }
+</div>

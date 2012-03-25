@@ -45,7 +45,7 @@ namespace TouristGuide.Controllers
 
         public ViewResult Details(int id)
         {
-            Country country = db.Country.Find(id);
+            Country country = db.Country.Include(c => c.Coordinates).Where(x => x.ID == id).Single();
             return View(country);
         }
 
@@ -116,6 +116,36 @@ namespace TouristGuide.Controllers
             db.Country.Remove(country);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AttractionsForCountry(string country)
+        {
+            //Get the data from the database
+            var places = db.Place.Where(x => x.Country.Name == country).Include(c => c.Coordinates).Take(100);
+            List<PushPinModel> pushpins = new List<PushPinModel>();
+
+            //add info to list of pushpins
+            foreach (var place in places)
+            {
+                //set the html to pass into the description
+                string descriptionHtml;
+                if (place.Description.Length > 200)
+                    descriptionHtml = place.Description.Substring(0, 200) + "...";
+                else
+                    descriptionHtml = place.Description;
+
+                //add the pushpin info
+                pushpins.Add(new PushPinModel
+                {
+                    Description = descriptionHtml,
+                    Latitude = place.Coordinates.Latitude,
+                    Longitude = place.Coordinates.Longitude,
+                    Title = "<a href=\"/Place/Details/" + place.ID + "\">" + place.Name + "</a>"
+                });
+            }
+
+            //return the list as JSON
+            return Json(pushpins);
         }
 
         protected override void Dispose(bool disposing)

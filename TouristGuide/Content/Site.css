@@ -642,6 +642,10 @@ div.search-cat input[type="text"]
     width: 100px;
 }
 
+div.search-cat p a:hover {
+	cursor: pointer;
+}
+
 /*------------------*/
 .countryObject
 {
@@ -804,4 +808,9 @@ padding:20px;
 .validation-summary-valid
 {
     display: none;
+}
+
+#showreview:hover {
+	cursor: pointer;
+	
 }

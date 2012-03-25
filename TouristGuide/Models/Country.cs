@@ -14,6 +14,8 @@ namespace TouristGuide.Models
         [Required]
         public string Name { get; set; }
 
+        public Coordinates Coordinates { get; set; }
+
         [Required]
         [DataType(DataType.MultilineText)]
         [AllowHtml]

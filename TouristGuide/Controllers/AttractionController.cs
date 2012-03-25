@@ -9,25 +9,27 @@ using TouristGuide.Models;
 using System.Web.Security;
 using TouristGuide.Helpers;
 using System.IO;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace TouristGuide.Controllers
-{ 
+{
     public class AttractionController : Controller
     {
         private TouristGuideDB db = new TouristGuideDB();
-
 
         #region Attractions
         //
         // GET: /Attraction/
 
-        public ViewResult Index(string country, string place, string attraction, int start = 0, int count = 20)
+        public ViewResult Index(int start = 0, int count = 20)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
+            List<Attraction> attractions = FilterAttractions(null, null, null, start, count, "rating", true);
             return View(attractions);
         }
 
-        private List<Attraction> FilterAttractions(string country, string place, string attraction, int start, int count)
+        private List<Attraction> FilterAttractions(string country, string place, string attraction, int start,
+            int count, string sort, bool desc)
         {
             IQueryable<Attraction> attractions = db.Attraction;
 
@@ -44,13 +46,23 @@ namespace TouristGuide.Controllers
             {
                 attractions = attractions.Where(x => x.Name != null && x.Name.Contains(attraction));
             }
-            
-            return attractions.OrderBy(x=>x.ID).Skip(start).Take(count).ToList();
+
+            if (sort == "rating")
+            {
+                attractions = attractions.OrderByWithDirection(x => x.AvgRating, desc);
+            }
+            else if (sort == "leters")
+            {
+                attractions = attractions.OrderByWithDirection(x => x.Name, desc);
+            }
+
+            return attractions.Skip(start).Take(count).ToList();
         }
 
-        public ViewResult GetAttractions(string country, string place, string attraction, int start, int count)
+        public ViewResult GetAttractions(string country, string place, string attraction, int start, int count,
+            string sort, bool desc)
         {
-            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count);
+            List<Attraction> attractions = FilterAttractions(country, place, attraction, start, count, sort, desc);
             return View(attractions);
         }
 
@@ -84,16 +96,18 @@ namespace TouristGuide.Controllers
             //Attraction attraction = db.Attraction.Find(id);
             //attraction.Reviews = db.AttractionReview.Where(a => a.AttractionID == id).ToList();
             //attraction.Images = db.AttractionImage.Where(a => a.AttractionID == id).ToList();
-            var attraction = db.Attraction.Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates).Include(c => c.Country).Include(c=> c.AttractionType)
-                .Where(a => a.ID == id).SingleOrDefault();
+
+            var attraction = db.Attraction.Include(i => i.Images).Include(a => a.Address).Include(c => c.Coordinates)
+                .Include(c => c.Country).Include(c => c.AttractionType).Where(a => a.ID == id).SingleOrDefault();
+
             ViewData["Reviews"] = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x => x.Date)
-                .Take(num).ToList();            
+                .Take(num).ToList();
             return View(attraction);
         }
 
         public ViewResult GetReviews(int id, int start, int count)
         {
-            var rev = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x=>x.Date)
+            var rev = db.AttractionReview.Where(a => a.AttractionID == id).OrderByDescending(x => x.Date)
                 .Skip(start).Take(count).ToList();
             return View(rev);
         }
@@ -144,7 +158,7 @@ namespace TouristGuide.Controllers
             db.SaveChanges();
             return RedirectToAction("Details", new { id = attraction.ID });
         }
-        
+
         //
         // GET: /Attraction/Edit/5
         [Authorize(Roles = "admin")]
@@ -189,7 +203,7 @@ namespace TouristGuide.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
-        {            
+        {
             Attraction attraction = db.Attraction.Find(id);
             //remove reviews
             var deleteAttractionReviews =
@@ -282,10 +296,10 @@ namespace TouristGuide.Controllers
 
         public ActionResult UpdateAvgRatings()
         {
-            var attractions = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType);
+            var attractions = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType).ToList();
             foreach (var attraction in attractions)
             {
-                var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID);
+                var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID).ToList();
                 int ratingSum = 0;
                 foreach (var item in reviews)
                 {
@@ -297,6 +311,7 @@ namespace TouristGuide.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         //
         // GET: /Attraction/ReviewEdit/5
@@ -366,7 +381,7 @@ namespace TouristGuide.Controllers
             return RedirectToAction("Details", new { id = review.AttractionID });
         }
 
-        #endregion Reviews
+        #endregion
 
         #region Helpers
 

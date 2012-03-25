@@ -134,6 +134,36 @@ namespace TouristGuide.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult AttractionsForPlace(string place)
+        {
+            //Get the data from the database
+            var attractions = db.Attraction.Where(x => x.Address.City == place || x.Address.Region == place).Include(c => c.Coordinates).Take(100);
+            List<PushPinModel> pushpins = new List<PushPinModel>();
+
+            //add info to list of pushpins
+            foreach (var attraction in attractions)
+            {
+                //set the html to pass into the description
+                string descriptionHtml;
+                if(attraction.Description.Length>200)
+                    descriptionHtml = attraction.Description.Substring(0,200) + "...";
+                else
+                    descriptionHtml = attraction.Description;
+
+                //add the pushpin info
+                pushpins.Add(new PushPinModel
+                {
+                    Description = descriptionHtml,
+                    Latitude = attraction.Coordinates.Latitude,
+                    Longitude = attraction.Coordinates.Longitude,
+                    Title = "<a href=\"/Attraction/Details/" + attraction.ID + "\">" + attraction.Name + "</a>"
+                });
+            }
+
+            //return the list as JSON
+            return Json(pushpins);
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
