@@ -441,10 +441,11 @@ footer li a:hover
 
 fieldset
 {
-    border: 1px solid #ddd;
+    border: 0px;
     padding: 0 1.4em 1.4em 1.4em;
     margin: 2em;
     text-align: left;
+    padding-left: 0px;
 }
 
 legend

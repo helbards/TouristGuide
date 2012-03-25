@@ -16,11 +16,39 @@
     var country = '';
     var place = '';
     var attr = '';
+    var sort = 'rating';
+    var sortDesc = true;
 
     $(document).ready(function () {
         country = $("#country").val();
         place = $("#place").val();
         attr = $("#attraction").val();
+
+        $("#sortByRating").click(function () {
+            if (sort == 'rating') {
+                sortDesc = sortDesc ? false : true;
+            }
+            else {
+                $("#sortByRating").text('[avg rating]');
+                $("#sortByLeters").text('alphbetically');
+                sortDesc = true;
+                sort = 'rating';
+            }
+            Sort();
+        });
+
+        $("#sortByLeters").click(function () {
+            if (sort == 'leters') {
+                sortDesc = sortDesc ? false : true;
+            }
+            else {
+                $("#sortByRating").text('avg rating');
+                $("#sortByLeters").text('[alphbetically]');
+                sortDesc = false;
+                sort = 'leters';
+            }
+            Sort();
+        });
 
         if ($('.post').length < count) {
             more = false;
@@ -73,7 +101,7 @@
             type: 'GET',
             contentType: 'application/json',
             data: { country: country, place: place,
-                attraction: attr, start: start, count: count
+                attraction: attr, start: start, count: count, sort: sort, desc: sortDesc
             },
             dataType: 'html',
             success: $.proxy(Results, this)
@@ -84,7 +112,7 @@
         if (data != null && data.trim() != '') {
             HideLoading();
             $("#render").append(data);
-            if (data.split('<div class="post">').length - 1 < count) {
+            if (data.split('<div class="post attractionsLemonBg">').length - 1 < count) {
                 more = false;
                 HideLoading();
             }
@@ -99,13 +127,41 @@
         }
     }
 
+    function Sort() {
+        $(".post").remove();
+
+        more = true;
+        loading = true;
+        start = 0;
+        GetAtt();
+    }
+
+    function Filter() {
+        country = $("#country").val();
+        place = $("#place").val();
+        attr = $("#attraction").val();
+
+        $(".post").remove();
+
+        more = true;
+        loading = true;
+        start = 0;
+        GetAtt();
+    }
+
 </script>
 @Html.Partial("Partial/Autocomplete")
 
+<div class="left border-bottom search-cat">
+    <p>
 @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
 {
-    <p>@Html.ActionLink("Add attraction", "Create")</p>
+    @Html.ActionLink("Add attraction", "Create")@: |
 }
+    Sort by: 
+        <a id="sortByRating">[avg rating]</a> | <a id="sortByLeters">alphbetically</a>
+    </p>
+</div>
 
 <div class="center border-bottom search-cat">
 @using (Html.BeginForm())
@@ -113,11 +169,11 @@
     <div style="font-size:20px;margin-bottom:20px;">Filter Attractions</div>
    <span style="font-size:16px;padding-right:5px;padding-left:5px;">Country:</span>
     @Html.TextBox("country") 
- <span style="font-size:16px;padding-right:5px;padding-left:5px;">City/Region:</span>
+	<span style="font-size:16px;padding-right:5px;padding-left:5px;">City/Region:</span>
     @Html.TextBox("place") 
    <span style="font-size:16px;padding-right:5px;padding-left:5px;">Attraction:</span>
-    @Html.TextBox("attraction")
-      <input type="submit" value="Filter" style="margin:20px;color:Gray;"/>
+   @Html.TextBox("attraction")
+   <input type="submit" value="Filter" onclick="Filter(); return false;" style="margin:20px;color:Gray;"/>
 }
 </div>
 

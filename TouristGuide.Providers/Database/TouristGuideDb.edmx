@@ -17,7 +17,7 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserRoles" EntitySet="UserRoles" />
           </AssociationSet>
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -81,7 +81,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        </Schema></edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TouristGuideDBModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -97,22 +97,22 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserRoles" EntitySet="UserRoles" />
           </AssociationSet>
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="RoleId" />
           </Key>
-          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Role" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Role" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserRoles" Relationship="TouristGuideDBModel.FK_UserRoles_Roles" FromRole="Roles" ToRole="UserRoles" />
         </EntityType>
         <EntityType Name="UserRoles">
           <Key>
             <PropertyRef Name="UserRoleId" />
           </Key>
-          <Property Name="UserRoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="RoleId" Type="Int32" />
+          <Property Type="Int32" Name="UserRoleId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="Int32" Name="RoleId" />
           <NavigationProperty Name="Roles" Relationship="TouristGuideDBModel.FK_UserRoles_Roles" FromRole="UserRoles" ToRole="Roles" />
           <NavigationProperty Name="Users" Relationship="TouristGuideDBModel.FK_UserRoles_Users" FromRole="UserRoles" ToRole="Users" />
         </EntityType>
@@ -120,30 +120,30 @@
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Login" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
-          <Property Name="Email" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
-          <Property Name="Comment" Type="String" MaxLength="1024" Unicode="true" FixedLength="false" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="PasswordQuestion" Type="String" MaxLength="1024" Unicode="true" FixedLength="false" />
-          <Property Name="PasswordAnswer" Type="String" MaxLength="1024" Unicode="true" FixedLength="false" />
-          <Property Name="IsApproved" Type="Boolean" />
-          <Property Name="LastActivityDate" Type="DateTime" />
-          <Property Name="LastLoginDate" Type="DateTime" />
-          <Property Name="LastPasswordChangedDate" Type="DateTime" />
-          <Property Name="CreationDate" Type="DateTime" />
-          <Property Name="IsOnLine" Type="Boolean" />
-          <Property Name="IsLockedOut" Type="Boolean" />
-          <Property Name="LastLockedOutDate" Type="DateTime" />
-          <Property Name="FailedPasswordAttemptCount" Type="Int32" />
-          <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" />
-          <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" />
-          <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" />
+          <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Login" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Email" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Comment" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PasswordQuestion" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PasswordAnswer" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsApproved" />
+          <Property Type="DateTime" Name="LastActivityDate" />
+          <Property Type="DateTime" Name="LastLoginDate" />
+          <Property Type="DateTime" Name="LastPasswordChangedDate" />
+          <Property Type="DateTime" Name="CreationDate" />
+          <Property Type="Boolean" Name="IsOnLine" />
+          <Property Type="Boolean" Name="IsLockedOut" />
+          <Property Type="DateTime" Name="LastLockedOutDate" />
+          <Property Type="Int32" Name="FailedPasswordAttemptCount" />
+          <Property Type="DateTime" Name="FailedPasswordAttemptWindowStart" />
+          <Property Type="Int32" Name="FailedPasswordAnswerAttemptCount" />
+          <Property Type="DateTime" Name="FailedPasswordAnswerAttemptWindowStart" />
           <NavigationProperty Name="UserRoles" Relationship="TouristGuideDBModel.FK_UserRoles_Users" FromRole="Users" ToRole="UserRoles" />
         </EntityType>
         <Association Name="FK_UserRoles_Roles">
-          <End Role="Roles" Type="TouristGuideDBModel.Roles" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="TouristGuideDBModel.UserRoles" Multiplicity="*" />
+          <End Type="TouristGuideDBModel.Roles" Role="Roles" Multiplicity="0..1" />
+          <End Type="TouristGuideDBModel.UserRoles" Role="UserRoles" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Roles">
               <PropertyRef Name="RoleId" />
@@ -154,8 +154,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserRoles_Users">
-          <End Role="Users" Type="TouristGuideDBModel.Users" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="TouristGuideDBModel.UserRoles" Multiplicity="*" />
+          <End Type="TouristGuideDBModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="TouristGuideDBModel.UserRoles" Role="UserRoles" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="UserId" />
@@ -171,37 +171,49 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TouristGuideDBModelStoreContainer" CdmEntityContainer="TouristGuideDBEntities">
-          <EntitySetMapping Name="Roles"><EntityTypeMapping TypeName="TouristGuideDBModel.Roles"><MappingFragment StoreEntitySet="Roles">
-            <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-            <ScalarProperty Name="Role" ColumnName="Role" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="UserRoles"><EntityTypeMapping TypeName="TouristGuideDBModel.UserRoles"><MappingFragment StoreEntitySet="UserRoles">
-            <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
-            <ScalarProperty Name="UserId" ColumnName="UserId" />
-            <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="TouristGuideDBModel.Users"><MappingFragment StoreEntitySet="Users">
-            <ScalarProperty Name="UserId" ColumnName="UserId" />
-            <ScalarProperty Name="Login" ColumnName="Login" />
-            <ScalarProperty Name="Email" ColumnName="Email" />
-            <ScalarProperty Name="Comment" ColumnName="Comment" />
-            <ScalarProperty Name="Password" ColumnName="Password" />
-            <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
-            <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
-            <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-            <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
-            <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
-            <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
-            <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-            <ScalarProperty Name="IsOnLine" ColumnName="IsOnLine" />
-            <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
-            <ScalarProperty Name="LastLockedOutDate" ColumnName="LastLockedOutDate" />
-            <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
-            <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
-            <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
-            <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          </EntityContainerMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="TouristGuideDBModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="TouristGuideDBModel.UserRoles">
+              <MappingFragment StoreEntitySet="UserRoles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TouristGuideDBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
+                <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+                <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
+                <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+                <ScalarProperty Name="LastLockedOutDate" ColumnName="LastLockedOutDate" />
+                <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+                <ScalarProperty Name="IsOnLine" ColumnName="IsOnLine" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -222,18 +234,19 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="TouristGuideDb" ZoomLevel="99">
-        <EntityTypeShape EntityType="TouristGuideDBModel.Roles" Width="1.5" PointX="0.75" PointY="1.125" Height="1.5956835937500002" IsExpanded="true" />
-        <EntityTypeShape EntityType="TouristGuideDBModel.UserRoles" Width="1.5" PointX="3" PointY="0.875" Height="1.9802864583333335" IsExpanded="true" />
-        <EntityTypeShape EntityType="TouristGuideDBModel.Users" Width="1.5" PointX="6.5" PointY="0.5" Height="4.8648079427083326" IsExpanded="true" />
-        <AssociationConnector Association="TouristGuideDBModel.FK_UserRoles_Roles" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="1.9228417968750002" />
-          <ConnectorPoint PointX="3" PointY="1.9228417968750002" />
+        <EntityTypeShape EntityType="TouristGuideDBModel.Roles" Width="1.5" PointX="0.75" PointY="1.125" Height="1.5956835937499994" />
+        <EntityTypeShape EntityType="TouristGuideDBModel.UserRoles" Width="1.5" PointX="3" PointY="0.875" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="TouristGuideDBModel.Users" Width="1.5" PointX="0.75" PointY="7.5" Height="4.8648079427083317" />
+        <AssociationConnector Association="TouristGuideDBModel.FK_UserRoles_Roles" >
+          <ConnectorPoint PointX="2.25" PointY="1.9228417968749998" />
+          <ConnectorPoint PointX="3" PointY="1.9228417968749998" />
         </AssociationConnector>
-        <AssociationConnector Association="TouristGuideDBModel.FK_UserRoles_Users" ManuallyRouted="false">
-          <ConnectorPoint PointX="6.5" PointY="1.8651432291666668" />
-          <ConnectorPoint PointX="4.5" PointY="1.8651432291666668" />
+        <AssociationConnector Association="TouristGuideDBModel.FK_UserRoles_Users" >
+          <ConnectorPoint PointX="2.25" PointY="9.9324039713541659" />
+          <ConnectorPoint PointX="3.75" PointY="9.9324039713541659" />
+          <ConnectorPoint PointX="3.75" PointY="2.8552864583333317" />
         </AssociationConnector>
-        </Diagram>
+      </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

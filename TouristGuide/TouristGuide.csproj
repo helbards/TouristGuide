@@ -129,6 +129,7 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PlaceController.cs" />
     <Compile Include="Controllers\WebServiceController.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -403,18 +404,25 @@
     <Content Include="Views\Attraction\Partial\ShowMore.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\fonts\SegoeWP-Black.ttf" />
-    <None Include="Content\fonts\SegoeWP-Bold.ttf" />
-    <None Include="Content\fonts\SegoeWP-Light.ttf" />
-    <None Include="Content\fonts\SegoeWP-Semibold.ttf" />
-    <None Include="Content\fonts\SegoeWP-Semilight.ttf" />
-    <None Include="Content\fonts\SegoeWP.ttf" />
-    <None Include="Content\fonts\SegoeWPN-Black.ttf" />
-    <None Include="Content\fonts\SegoeWPN-Bold.ttf" />
-    <None Include="Content\fonts\SegoeWPN-Light.ttf" />
-    <None Include="Content\fonts\SegoeWPN-Semibold.ttf" />
-    <None Include="Content\fonts\SegoeWPN-Semilight.ttf" />
-    <None Include="Content\fonts\SegoeWPN.ttf" />
+    <Content Include="Views\Place\Partial\Autocomplete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Place\DisplayTemplates\Place.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Place\GetPlaces.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Country\DisplayTemplates\Country.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Country\Partial\Autocomplete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Country\GetCountries.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Attraction\GetReview.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

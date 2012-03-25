@@ -16,13 +16,27 @@ namespace TouristGuide.Controllers
         //
         // GET: /Country/
 
-        public ViewResult Index(string country)
+        public ViewResult Index(int start = 0, int count = 20)
         {
-            List<Country> countries;
-            if(country!=null)
-                countries = db.Country.Where(c=> c.Name.Contains(country)).OrderBy(c => c.Name).ToList();
-            else
-                countries = db.Country.OrderBy(c => c.Name).ToList();
+            List<Country> countries = FilterCountries(null, start, count);
+            return View(countries);
+        }
+
+        private List<Country> FilterCountries(string country, int start, int count)
+        {
+            IQueryable<Country> countries = db.Country;
+
+            if (country != null && country != "")
+            {
+                countries = countries.Where(a => a.Name.Contains(country));
+            }
+            
+            return countries.OrderBy(x => x.Name).Skip(start).Take(count).ToList();
+        }
+
+        public ViewResult GetCountries(string country, int start, int count)
+        {
+            List<Country> countries = FilterCountries(country, start, count);
             return View(countries);
         }
 
