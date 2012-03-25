@@ -312,23 +312,6 @@ namespace TouristGuide.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult UpdateAvgRatings()
-        {
-            var attractions = db.Attraction.Include(c => c.Country).Include(c => c.AttractionType);
-            foreach (var attraction in attractions)
-            {
-                var reviews = db.AttractionReview.Where(a => a.AttractionID == attraction.ID);
-                int ratingSum = 0;
-                foreach (var item in reviews)
-                {
-                    ratingSum += item.Rating;
-                }
-                if (reviews.Count() > 0)
-                    attraction.AvgRating = (double)ratingSum / reviews.Count();
-            }
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
         //
         // GET: /Attraction/ReviewEdit/5

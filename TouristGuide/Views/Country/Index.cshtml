@@ -19,7 +19,7 @@
     $(document).ready(function () {
         country = $("#country").val();
 
-        if ($('.list li').length < count) {
+        if ($('.countryBar').length < count) {
             more = false;
             HideLoading();
         }
@@ -27,13 +27,31 @@
             ShowLoading();
             $(window).scroll($.proxy(ScrollHandler, this));
         }
+
+        AddActions();
     });
+
+    function AddActions() {
+        $(".countryBar").click(function () {
+            var id = $(this).attr("name");
+            var url = "/country/details/";
+            window.location.replace(url + id);
+        });
+
+        $(".countryBar").hover(
+          function () {
+              $(this).css("background-image", "url(/Content/images/countryOrangeDark.png)");
+          },
+          function () {
+              $(this).css("background-image", "url(/Content/images/countryOrange.png)");
+          });
+    }
 
     function ShowLoading() {
         loaderImg = $("<div>").addClass("bar").css("clear", "both").css("text-align", "center");
         var img = $("<img>").attr("src", "/Content/images/indicator.gif");
         loaderImg.append(img);
-        $("#render").append(loaderImg);
+        $(".table_center").append(loaderImg);
     }
 
     function HideLoading() {
@@ -80,8 +98,8 @@
     function Results(data) {
         if (data != null && data.trim() != '') {
             HideLoading();
-            $(".list").append(data);
-            if (data.split('<li>').length - 1 < count) {
+            $(".table_center").append(data);
+            if (data.split('<div class="countryBar"').length - 1 < count) {
                 more = false;
                 HideLoading();
             }
@@ -89,6 +107,7 @@
                 ShowLoading();
                 loading = false;
             }
+            AddActions();
         }
         else {
             more = false;
@@ -99,7 +118,7 @@
     function Filter() {
         country = $("#country").val();
 
-        $(".list li").remove();
+        $(".countryBar").remove();
         ShowLoading();
 
         more = true;
@@ -133,19 +152,4 @@
 	@Html.DisplayFor(x=>x)
 </div>
 </div>
-<script type="text/javascript">
 
-    $(".countryBar").click(function () {
-        var id = $(this).attr("name");
-        var url = "/country/details/";
-        window.location.replace(url + id);
-    });
-
-    $(".countryBar").hover(
-  function () {
-      $(this).css("background-image", "url(/Content/images/countryOrangeDark.png)");
-  },
-  function () {
-      $(this).css("background-image", "url(/Content/images/countryOrange.png)");
-  });
-</script>

@@ -21,7 +21,7 @@
         country = $("#country").val();
         place = $("#place").val();
 
-        if ($('.list li').length < count) {
+        if ($('.regionBar').length < count) {
             more = false;
             HideLoading();
         }
@@ -29,13 +29,32 @@
             ShowLoading();
             $(window).scroll($.proxy(ScrollHandler, this));
         }
-    });
+
+        AddActions();
+      });
+
+    function AddActions() {
+        $(".regionBar").click(function () {
+            var id = $(this).attr("name");
+            var url = "/place/details/";
+            window.location.replace(url + id);
+        });
+        $(".regionBar").hover(
+          function () {
+              $(this).css("background-image", "url(/Content/images/countryGreenDark.png)");
+              $(this).css("cursor", "pointer");
+          },
+          function () {
+              $(this).css("background-image", "url(/Content/images/countryGreen.png)");
+              $(this).css("cursor", "auto");
+          });
+      }
 
     function ShowLoading() {
         loaderImg = $("<div>").addClass("bar").css("clear", "both").css("text-align", "center");
         var img = $("<img>").attr("src", "/Content/images/indicator.gif");
         loaderImg.append(img);
-        $("#render").append(loaderImg);
+        $(".table_center").append(loaderImg);
     }
 
     function HideLoading() {
@@ -82,8 +101,8 @@
     function Results(data) {
         if (data != null && data.trim() != '') {
             HideLoading();
-            $(".list").append(data);
-            if (data.split('<li>').length - 1 < count) {
+            $(".table_center").append(data);
+            if (data.split('<div class="regionBar"').length - 1 < count) {
                 more = false;
                 HideLoading();
             }
@@ -91,6 +110,7 @@
                 ShowLoading();
                 loading = false;
             }
+            AddActions();
         }
         else {
             more = false;
@@ -102,7 +122,7 @@
         country = $("#country").val();
         place = $("#place").val();
 
-        $(".list li").remove();
+        $(".regionBar").remove();
         ShowLoading();
 
         more = true;
@@ -130,39 +150,16 @@
 </form>
 </div>
 
-<div class="table_center">
-  
-     
+<div class="table_center">     
        <span style="font-size:20px;">Cities / Regions</span>
+        @if (Request.IsAuthenticated && HttpContext.Current.User.IsInRole("admin"))
+        {
+           <div>
+           admin
+           </div>
+        }
   
   <div style="margin-top:20px;">
     @Html.DisplayFor(x=>x)
+  </div>
 </div>
-</div>
-
-<script type="text/javascript">
-
-    $(".regionBar").click(function () {
-        var id = $(this).attr("name");
-        var url = "/place/details/";
-        window.location.replace(url + id);
-    });
-
-
-    $(".regionBar").hover(
-  function () {
-      $(this).css("background-image", "url(/Content/images/countryGreenDark.png)");
-      $(this).css("cursor", "pointer");
-
-  },
-  function () {
-      $(this).css("background-image", "url(/Content/images/countryGreen.png)");
-      $(this).css("cursor", "auto");
-  });
-
-
- 
-
-
-
-</script>
