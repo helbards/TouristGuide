@@ -219,7 +219,7 @@ namespace TouristGuide.Controllers
         [WebMethod]
         public JsonResult GetCountries(int start, int count)
         {
-            var countries = db.Country.Skip(start).Take(count).Select(x => new
+            var countries = db.Country.OrderBy(x=>x.Name).Skip(start).Take(count).Select(x => new
             {
                 ID = x.ID,
                 Name = x.Name

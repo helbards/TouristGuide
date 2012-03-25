@@ -4,20 +4,10 @@
     ViewBag.Title = "Delete attraction";
 }
 
-<h3>Are you sure you want to delete this?</h3>
-<fieldset>
-    <legend>Attraction</legend>
+<h3>Are you sure you want to delete this attraction?</h3>
 
-    <div class="display-label">Name</div>
-    <div class="display-field">
-        <b>@Html.DisplayFor(model => model.Name)</b>
-    </div>
-
-    <div class="display-label">Description</div>
-    <div class="display-field">
-        @Html.Raw(Model.Description)
-    </div>
-</fieldset>
+    <div>Name: <b>@Html.DisplayFor(model => model.Name)</b></div>
+    <br />
 @using (Html.BeginForm()) {
     <p>
         <input type="submit" value="Delete" /> |

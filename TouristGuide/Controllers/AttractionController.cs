@@ -256,11 +256,18 @@ namespace TouristGuide.Controllers
         //
         // POST: /Attraction/ReviewCreate
         [Authorize]
-        [HttpPost]
-        public ActionResult ReviewCreate(AttractionReview review)
+        public ActionResult ReviewCreate(int AttractionId, String Author, int Rating, String Text)
         {
+            AttractionReview review = new AttractionReview();
+            review.AttractionID = AttractionId;
+            review.Author = Author;
+            review.Rating = Rating;
+            review.Text = Text;
             review.Date = DateTime.Now;
-            var attraction = db.Attraction.Find(review.AttractionID);
+
+            var attraction = db.Attraction.Include(x => x.AttractionType).Include(x => x.Address).Include(x => x.Coordinates)
+                .Include(x => x.Country).SingleOrDefault(x => x.ID == review.AttractionID);
+
             int reviewsCount = db.AttractionReview.Where(a => a.AttractionID == review.AttractionID).Count();
 
             if (ModelState.IsValid)
@@ -269,7 +276,8 @@ namespace TouristGuide.Controllers
                 attraction.AvgRating = ((attraction.AvgRating * reviewsCount) + review.Rating) / (reviewsCount + 1);
                 db.SaveChanges();
             }
-            return RedirectToAction("Details", new { id = review.AttractionID });
+            //return RedirectToAction("Details", new { id = review.AttractionID });
+            return View("GetReview", review);
         }
 
         public ActionResult UpdateAvgRatings()
